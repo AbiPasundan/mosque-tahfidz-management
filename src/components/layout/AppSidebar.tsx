@@ -11,7 +11,7 @@ import {
   LuSettings,
   LuLogOut,
 } from 'react-icons/lu';
-import { useLogout } from '@/hooks/useLogout';
+import { useLogout } from '@/hooks/auth/useLogout';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LuLayoutDashboard },

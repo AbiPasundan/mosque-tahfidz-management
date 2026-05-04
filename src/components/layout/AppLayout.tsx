@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { MobileBottomNav } from '../navigation/MobileBottomNav';
-import { useMe } from '@/hooks/useMe';
+import { useMe } from '@/hooks/auth/useMe';
 // import { useMe } from '@/services/auth';
 
 export function AppLayout() {
