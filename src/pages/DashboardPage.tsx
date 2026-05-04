@@ -16,6 +16,7 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import LineBarAreaComposedChart from '@/components/dashboard/DashboardChart';
 import { historyColumns } from '@/components/dashboard/DashboardTable';
 import { DataTable } from '@/components/table/Table';
+import { useDashboardCard } from '@/hooks/dashboard/useDashboardCard';
 
 
 const recentHistory = [
@@ -66,6 +67,10 @@ const recentHistory = [
 ];
 
 export default function DashboardPage() {
+  const { data, isLoading, isError } = useDashboardCard();
+  console.log(data?.data);
+
+
   const quickActionsData: QuickActionItem[] = [
     {
       icon: <LuUserPlus className="w-5 h-5" />,
@@ -104,19 +109,24 @@ export default function DashboardPage() {
       subtitle: '1 hour ago • Admin Action',
     },
   ];
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
   return (
     <div className="space-y-lg">
       <DashboardHeader />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
-        <DashboardCard label="TOTAL STUDENTS" value="1,248" subtitle="" icon={<LuUsers className="w-5 h-5 text-primary" />} >
-          <TrendIndicator change="+12%" trend="up" label="from last month" />
-        </DashboardCard>
+        <DashboardCard label="TOTAL STUDENTS" value={data?.data?.total_students} subtitle="" icon={<LuUsers className="w-5 h-5 text-primary" />} />
 
-        <DashboardCard label="ACTIVE TODAY" value="892" subtitle="⏱ Real-time attendance" icon={<LuCircleCheck className="w-5 h-5 text-primary" />} />
+        <DashboardCard label="ACTIVE TODAY" value={data?.data?.active_today} icon={<LuCircleCheck className="w-5 h-5 text-primary" />} />
 
-        <DashboardCard label="WEEKLY PROGRESS" value="76%" subtitle="" icon={<LuStar className="w-5 h-5 text-primary" />} >
-          <TrendIndicator change="On target for Quran khatam" trend="up" label="" />
+        <DashboardCard label="WEEKLY PROGRESS" value={data?.data?.weekly_progress_percentage} subtitle="" icon={<LuStar className="w-5 h-5 text-primary" />} >
+          {/* <TrendIndicator change="On target for Quran khatam" trend="up" label="" /> */}
         </DashboardCard>
       </div>
 

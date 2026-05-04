@@ -4,7 +4,7 @@ import { cn } from '@/utils/cn';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { LuMail, LuLock, LuEye, LuEyeOff, LuTrendingUp, LuLayoutDashboard } from 'react-icons/lu';
-import { useLogin } from '@/hooks/useLogin';
+import { useLogin } from '@/hooks/auth/useLogin';
 import { loginSchema, type LoginFormValues } from '@/validations/auth';
 
 export default function LoginPage() {
