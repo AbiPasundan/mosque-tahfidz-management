@@ -32,7 +32,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/roles" element={<RolesPage />} />
+            <Route path="/mentor" element={<RolesPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,3 +1,4 @@
+import { BsFillPersonFill } from "react-icons/bs"; 
 import { NavLink, useLocation } from 'react-router';
 import { cn } from '@/utils/cn';
 import {
@@ -5,27 +6,23 @@ import {
   LuUsers,
   LuSearch,
   LuTrendingUp,
-  LuSettings,
+  LuHistory,
 } from 'react-icons/lu';
-
 const items = [
-  { path: '/', label: 'Home', icon: LuLayoutDashboard },
-  { path: '/students', label: 'Students', icon: LuUsers },
-  { path: '/search', label: 'Search', icon: LuSearch },
-  { path: '/progress', label: 'Progress', icon: LuTrendingUp },
-  { path: '/settings', label: 'Settings', icon: LuSettings },
+  { path: '/', label: 'Dashboard', icon: LuLayoutDashboard, roles: ['admin', 'mentor'] },
+  { path: '/students', label: 'Students', icon: LuUsers, roles: ['admin', 'mentor'] },
+  { path: '/mentor', label: 'Mentor', icon: BsFillPersonFill, roles: ['admin'] },
+  { path: '/progress', label: 'Progress Tracking', icon: LuTrendingUp, roles: ['admin', 'mentor'] },
+  { path: '/search', label: 'Global Search', icon: LuSearch, roles: ['admin', 'mentor'] },
+  { path: '/history', label: 'Activity Log', icon: LuHistory, roles: ['admin', 'mentor'] },
 ];
 
 export function MobileBottomNav() {
   const location = useLocation();
 
   return (
-    <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest/95 backdrop-blur-md border-t border-border-light z-40"
-      role="navigation"
-      aria-label="Mobile navigation"
-    >
-      <div className="flex justify-around items-center px-xs py-[6px] safe-area-inset-bottom">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest/95 backdrop-blur-md border-t border-border-light z-40" role="navigation" aria-label="Mobile navigation" >
+      <div className="flex justify-around items-center px-xs py-1.5 safe-area-inset-bottom">
         {items.map((item) => {
           const isActive =
             item.path === '/'
@@ -36,7 +33,7 @@ export function MobileBottomNav() {
               key={item.path}
               to={item.path}
               className={cn(
-                'flex flex-col items-center gap-[2px] py-[4px] px-sm rounded-lg min-w-[56px] transition-colors',
+                'flex flex-col items-center gap-0.5 py-[4px] px-sm rounded-lg min-w-14 transition-colors',
                 isActive
                   ? 'text-primary'
                   : 'text-muted hover:text-on-surface-variant'

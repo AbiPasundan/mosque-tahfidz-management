@@ -6,29 +6,22 @@ import {
   LuUsers,
   LuTrendingUp,
   LuSearch,
-  LuShield,
   LuHistory,
   LuSettings,
   LuLogOut,
 } from 'react-icons/lu';
 import { useLogout } from '@/hooks/auth/useLogout';
+import { useMe } from '@/hooks/auth/useMe';
+import { BsFillPersonFill } from 'react-icons/bs';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: LuLayoutDashboard },
-  { path: '/students', label: 'Students', icon: LuUsers },
-  { path: '/progress', label: 'Progress Tracking', icon: LuTrendingUp },
-  { path: '/search', label: 'Global Search', icon: LuSearch },
-  { path: '/roles', label: 'Role Management', icon: LuShield },
-  { path: '/history', label: 'Activity Log', icon: LuHistory },
+  { path: '/', label: 'Dashboard', icon: LuLayoutDashboard, roles: ['admin', 'mentor'] },
+  { path: '/students', label: 'Students', icon: LuUsers, roles: ['admin', 'mentor'] },
+  { path: '/mentor', label: 'Mentor', icon: BsFillPersonFill, roles: ['admin'] },
+  { path: '/progress', label: 'Progress Tracking', icon: LuTrendingUp, roles: ['admin', 'mentor'] },
+  { path: '/search', label: 'Global Search', icon: LuSearch, roles: ['admin', 'mentor'] },
+  { path: '/history', label: 'Activity Log', icon: LuHistory, roles: ['admin', 'mentor'] },
 ];
-// const navItems = [
-//   { path: '/', label: 'Dashboard', icon: LuLayoutDashboard, roles: ['admin', 'teacher', 'student'] },
-//   { path: '/students', label: 'Students', icon: LuUsers, roles: ['admin', 'teacher'] },
-//   { path: '/progress', label: 'Progress Tracking', icon: LuTrendingUp, roles: ['admin', 'teacher'] },
-//   { path: '/search', label: 'Global Search', icon: LuSearch, roles: ['admin', 'teacher'] },
-//   { path: '/roles', label: 'Role Management', icon: LuShield, roles: ['admin'] },
-//   { path: '/history', label: 'Activity Log', icon: LuHistory, roles: ['admin'] },
-// ];
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -44,6 +37,10 @@ export function AppSidebar() {
       console.error(error);
     }
   };
+
+  const { data: data, isLoading, isError } = useMe();
+  console.log(data.data.role);
+  const userRole = data?.data?.role;
 
   return (
     <>
@@ -75,34 +72,37 @@ export function AppSidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-md py-sm space-y-0.5">
-          {navItems.map((item) => {
-            const isActive =
-              item.path === '/'
-                ? location.pathname === '/'
-                : location.pathname.startsWith(item.path);
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  'group flex items-center gap-md px-md py-2.5 rounded-lg text-[14px] transition-all duration-150 relative',
-                  isActive
-                    ? 'bg-primary/8 text-primary font-medium'
-                    : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
-                )} >
-                {/* Active indicator bar */}
-                {isActive && (
-                  <span className="absolute left-0 top-1.5 bottom-1.5 w-0.75 rounded-full bg-primary" />
-                )}
-                <item.icon className={cn(
-                  'w-4.5 h-4.5 shrink-0',
-                  isActive ? 'text-primary' : 'text-on-surface-variant group-hover:text-on-surface'
-                )} />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
+          {!isLoading && !isError && userRole && (
+            navItems
+              .filter((item) => item.roles.includes(userRole))
+              .map((item) => {
+                const isActive =
+                  item.path === '/'
+                    ? location.pathname === '/'
+                    : location.pathname.startsWith(item.path);
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      'group flex items-center gap-md px-md py-2.5 rounded-lg text-[14px] transition-all duration-150 relative',
+                      isActive
+                        ? 'bg-primary/8 text-primary font-medium'
+                        : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                    )} >
+                    {isActive && (
+                      <span className="absolute left-0 top-1.5 bottom-1.5 w-0.75 rounded-full bg-primary" />
+                    )}
+                    <item.icon className={cn(
+                      'w-4.5 h-4.5 shrink-0',
+                      isActive ? 'text-primary' : 'text-on-surface-variant group-hover:text-on-surface'
+                    )} />
+                    <span>{item.label}</span>
+                  </NavLink>
+                );
+              })
+          )}
         </nav>
 
         {/* Bottom items */}
