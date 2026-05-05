@@ -7,6 +7,11 @@ import { LuPlus, LuFilter, LuDownload, LuEllipsisVertical, LuChevronLeft, LuChev
 import { Link } from 'react-router';
 import type { Student } from '@/constants/mockData';
 import { mockStudents } from '@/constants/mockData';
+import { DataTable } from '@/components/table/Table';
+import Breadcrumb from '@/components/students/Breadcrumb';
+import StudentHeader from '@/components/students/StudentHeader';
+import StudentDashboard from '@/components/students/StudentTable';
+import { useStudents } from '@/hooks/students/useStudents';
 
 /* ─── Avatar initials helper ─── */
 function getInitials(name: string) {
@@ -35,117 +40,48 @@ export default function StudentsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+  const { data, isLoading, isError } = useStudents();
+  const students = data?.data || [];
 
-  const { data: students = [], isLoading } = useQuery<Student[]>({
-    queryKey: ['students'],
-    queryFn: () => Promise.resolve(mockStudents),
-  });
+
+  // const { data: students = [], isLoading } = useQuery<Student[]>({
+  //   queryKey: ['students'],
+  //   queryFn: () => Promise.resolve(mockStudents),
+  // });
 
   // Filter
   let filtered = students;
   if (globalFilter) {
     filtered = filtered.filter(
-      (s) =>
+      (s: any) =>
         s.name.toLowerCase().includes(globalFilter.toLowerCase()) ||
         s.nis.includes(globalFilter) ||
         s.class.toLowerCase().includes(globalFilter.toLowerCase())
     );
   }
   if (statusFilter !== 'all') {
-    filtered = filtered.filter((s) => s.status.toLowerCase() === statusFilter);
+    filtered = filtered.filter((s: any) => s.status.toLowerCase() === statusFilter);
   }
 
   // Pagination
   const totalPages = Math.ceil(filtered.length / pageSize);
   const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-  const activeToday = students.filter((s) => s.status === 'Active').length;
+  const activeToday = students.filter((s: any) => s.status === 'Active').length;
 
   if (isLoading) return <TableSkeleton />;
 
   return (
     <div className="space-y-lg">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-xs text-[12px] text-muted">
-        <Link to="/" className="hover:text-primary transition-colors">Dashboard</Link>
-        <span>/</span>
-        <span className="text-on-surface font-medium">Students</span>
-      </div>
-
+      <Breadcrumb />
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-md">
-        <div>
-          <h1 className="text-h1 text-on-surface font-[Manrope]">Student Directory</h1>
-          <p className="text-body-md text-muted mt-xs">
-            Manage enrollments, monitor progress, and update learning levels for {students.length.toLocaleString()} students.
-          </p>
-        </div>
-        <Link
-          to="/students/new"
-          className="flex items-center gap-sm px-lg py-[9px] rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors flex-shrink-0"
-        >
-          <LuPlus className="w-4 h-4" />
-          Add Student
-        </Link>
-      </div>
-
+      <StudentHeader />
       {/* Filter Bar + Stats */}
-      <div className="flex flex-col lg:flex-row gap-md">
-        {/* Filters */}
-        <div className="flex-1 flex flex-wrap items-center gap-md bg-surface-container-lowest rounded-xl border border-border-card px-lg py-md">
-          <div className="flex items-center gap-sm">
-            <span className="text-[12px] font-semibold text-muted uppercase tracking-wider">Level:</span>
-            <select
-              value={levelFilter}
-              onChange={(e) => setLevelFilter(e.target.value)}
-              className="text-[13px] px-md py-[6px] rounded-lg border border-border-card bg-surface-container-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
-            >
-              <option value="all">All Levels</option>
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-sm">
-            <span className="text-[12px] font-semibold text-muted uppercase tracking-wider">Status:</span>
-            <select
-              value={statusFilter}
-              onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-              className="text-[13px] px-md py-[6px] rounded-lg border border-border-card bg-surface-container-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="inactive">Inactive</option>
-              <option value="graduated">Graduated</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-xs ml-auto">
-            <button className="p-2 rounded-lg hover:bg-surface-container transition-colors" aria-label="Filters">
-              <LuFilter className="w-4 h-4 text-muted" />
-            </button>
-            <button className="p-2 rounded-lg hover:bg-surface-container transition-colors" aria-label="Download">
-              <LuDownload className="w-4 h-4 text-muted" />
-            </button>
-          </div>
-        </div>
-
-        {/* Mini stat cards */}
-        <div className="flex gap-md flex-shrink-0">
-          <div className="bg-surface-container-lowest rounded-xl border border-border-card px-lg py-md min-w-[130px]">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Active Today</p>
-            <p className="text-[24px] font-bold text-on-surface font-[Manrope] leading-tight mt-xs">{activeToday}</p>
-          </div>
-          <div className="bg-surface-container-lowest rounded-xl border-2 border-primary/20 px-lg py-md min-w-[130px]">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">New Students</p>
-            <p className="text-[24px] font-bold text-on-surface font-[Manrope] leading-tight mt-xs">12</p>
-          </div>
-        </div>
-      </div>
-
+      <StudentDashboard />
       {/* Table */}
       <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
+          <table className="w-full min-w-200">
             <thead>
               <tr className="border-b border-border-card bg-surface-container-low/50">
                 {['Name', 'Age', 'Learning Level', 'Fluency', 'Status', 'Last Progress', ''].map((h) => (
@@ -159,7 +95,7 @@ export default function StudentsPage() {
               </tr>
             </thead>
             <tbody>
-              {paginated.map((student, i) => {
+              {paginated.map((student: any, i: any) => {
                 const colorClass = avatarColors[i % avatarColors.length];
                 return (
                   <tr
@@ -171,7 +107,7 @@ export default function StudentsPage() {
                       <div className="flex items-center gap-sm">
                         <div
                           className={cn(
-                            'w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0',
+                            'w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0',
                             colorClass
                           )}
                         >
@@ -184,7 +120,7 @@ export default function StudentsPage() {
                           >
                             {student.name}
                           </Link>
-                          <p className="text-[11px] text-muted">ID: #{student.nis}</p>
+                          {/* <p className="text-[11px] text-muted">ID: #{student.nis}</p> */}
                         </div>
                       </div>
                     </td>
@@ -193,19 +129,13 @@ export default function StudentsPage() {
                     {/* Learning Level */}
                     <td className="px-lg py-md">
                       <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary">
-                        {student.memorization.replace('Juz ', 'Juz ')}
+                        {student.learning_level}
                       </span>
                     </td>
                     {/* Fluency */}
                     <td className="px-lg py-md">
                       <div className="flex items-center gap-sm">
-                        <div className="w-16 h-[5px] bg-surface-container rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary rounded-full"
-                            style={{ width: `${student.completionRate}%` }}
-                          />
-                        </div>
-                        <span className="text-[11px] text-muted">{student.completionRate}% Fluency</span>
+                        <span className="text-[11px] text-muted">{student.fluency}</span>
                       </div>
                     </td>
                     {/* Status */}
@@ -214,7 +144,7 @@ export default function StudentsPage() {
                     </td>
                     {/* Last Progress */}
                     <td className="px-lg py-md text-[13px] text-on-surface-variant">
-                      {new Date(student.lastActivity).toLocaleDateString('en-US', {
+                      {new Date(student.join_date).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric',
@@ -312,13 +242,13 @@ export default function StudentsPage() {
           </button>
         </div>
 
-        <div className="bg-gradient-to-br from-primary to-primary-container rounded-xl p-lg text-on-primary">
+        <div className="bg-linear-to-br from-primary to-primary-container rounded-xl p-lg text-on-primary">
           <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-md">
             <LuDownload className="w-5 h-5" />
           </div>
           <h3 className="text-[16px] font-semibold font-[Manrope]">Export Reports</h3>
           <p className="text-[13px] text-on-primary/70 mt-xs">Generate monthly fluency and attendance reports for the board.</p>
-          <button className="flex items-center gap-sm mt-md px-md py-[7px] rounded-lg bg-white/20 hover:bg-white/30 transition-colors text-[13px] font-medium">
+          <button className="flex items-center gap-sm mt-md px-md py-1.75 rounded-lg bg-white/20 hover:bg-white/30 transition-colors text-[13px] font-medium">
             Download PDF <LuDownload className="w-3.5 h-3.5" />
           </button>
         </div>
