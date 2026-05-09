@@ -2,7 +2,7 @@ import { cn } from '@/utils/cn';
 import { flexRender, type Table } from '@tanstack/react-table';
 import { LuArrowUpDown } from 'react-icons/lu';
 import type { Student } from '@/constants/mockData';
-import { StudentStatusBadge } from '@/components/shared/StudentStatusBadge';
+import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
 import { Link } from 'react-router';
 
 interface ResponsiveTableProps<T> {
