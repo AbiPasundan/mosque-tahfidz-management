@@ -1,6 +1,6 @@
 import { LuChevronLeft, LuChevronRight, LuFilter, LuDownload } from 'react-icons/lu';
 import { useState } from 'react';
-import { DataTable } from '../table/Table';
+import { DataTable } from '@/components/ui/Table';
 
 export interface Student {
     id: string | number;
