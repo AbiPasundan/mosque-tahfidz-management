@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from 'react-router';
-import { useSidebarStore } from '@/store/sidebarStore';
+import { useSidebarStore } from '@/stores/sidebarStore';
 import { cn } from '@/utils/cn';
 import {
   LuLayoutDashboard,
@@ -10,8 +10,8 @@ import {
   LuSettings,
   LuLogOut,
 } from 'react-icons/lu';
-import { useLogout } from '@/hooks/auth/useLogout';
-import { useMe } from '@/hooks/auth/useMe';
+import { useLogout } from '@/features/auth/hooks/useLogout';
+import { useMe } from '@/features/auth/hooks/useMe';
 import { BsFillPersonFill } from 'react-icons/bs';
 
 const navItems = [
