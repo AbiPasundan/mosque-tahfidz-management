@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
-import { StudentStatusBadge } from '@/components/shared/StudentStatusBadge';
-import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
+import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { LuUser, LuCalendar, LuPlus, LuTrophy, LuCalendarDays, LuMessageSquare, LuChevronRight } from 'react-icons/lu';
 import { mockStudents, mockProgressRecords } from '@/constants/mockData';
 import { useState } from 'react';

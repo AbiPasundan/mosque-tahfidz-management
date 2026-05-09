@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { LuBookOpen, LuCircleCheck, LuUserPlus } from 'react-icons/lu';
 import { mockProgressRecords } from '@/constants/mockData';
 import { Link } from 'react-router';

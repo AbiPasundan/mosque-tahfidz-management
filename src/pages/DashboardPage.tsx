@@ -1,7 +1,7 @@
-import { DashboardCard } from '@/components/dashboard/DashboardCard';
-import { QuickActionsCard, type QuickActionItem } from '@/components/dashboard/QuickActionsCard';
-import { LiveUpdatesCard, type LiveUpdateItem } from '@/components/dashboard/LiveUpdatesCard';
-import { TrendIndicator } from '@/components/shared/TrendIndicator';
+import { DashboardCard } from '@/features/dashboard/components/DashboardCard';
+import { QuickActionsCard, type QuickActionItem } from '@/features/dashboard/components/QuickActionsCard';
+import { LiveUpdatesCard, type LiveUpdateItem } from '@/features/dashboard/components/LiveUpdatesCard';
+import { TrendIndicator } from '@/components/ui/TrendIndicator';
 import {
   LuUsers,
   LuCircleCheck,
@@ -12,11 +12,11 @@ import {
   LuPencil,
 } from 'react-icons/lu';
 import { Link } from 'react-router';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import LineBarAreaComposedChart from '@/components/dashboard/DashboardChart';
-import { historyColumns } from '@/components/dashboard/DashboardTable';
-import { DataTable } from '@/components/table/Table';
-import { useDashboardCard } from '@/hooks/dashboard/useDashboardCard';
+import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
+import LineBarAreaComposedChart from '@/features/dashboard/components/DashboardChart';
+import { historyColumns } from '@/features/dashboard/components/DashboardTable';
+import { DataTable } from '@/components/ui/Table';
+import { useDashboardCard } from '@/features/dashboard/hooks/useDashboardCard';
 
 
 const recentHistory = [

@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { cn } from '@/utils/cn';
-import { StudentStatusBadge } from '@/components/shared/StudentStatusBadge';
-import { TableSkeleton } from '@/components/shared/LoadingSkeleton';
+import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
+import { TableSkeleton } from '@/components/ui/LoadingSkeleton';
 import { LuPlus, LuFilter, LuDownload, LuEllipsisVertical, LuChevronLeft, LuChevronRight, LuArrowRight } from 'react-icons/lu';
 import { Link } from 'react-router';
 import type { Student } from '@/constants/mockData';
 import { mockStudents } from '@/constants/mockData';
-import { DataTable } from '@/components/table/Table';
-import Breadcrumb from '@/components/students/Breadcrumb';
-import StudentHeader from '@/components/students/StudentHeader';
-import StudentDashboard from '@/components/students/StudentTable';
-import { useStudents } from '@/hooks/students/useStudents';
+import { DataTable } from '@/components/ui/Table';
+import Breadcrumb from '@/features/students/components/Breadcrumb';
+import StudentHeader from '@/features/students/components/StudentHeader';
+import StudentDashboard from '@/features/students/components/StudentTable';
+import { useStudents } from '@/features/students/hooks/useStudents';
 
 /* ─── Avatar initials helper ─── */
 function getInitials(name: string) {

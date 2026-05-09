@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, Link } from 'react-router';
 import { LuSearch, LuUser, LuBookOpen, LuChevronRight, LuX, LuHistory, LuArrowRight } from 'react-icons/lu';
 import { cn } from '@/utils/cn';
-import { StudentStatusBadge } from '@/components/shared/StudentStatusBadge';
-import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
+import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { mockStudents } from '@/constants/mockData';
 import type { Student } from '@/constants/mockData';
 
