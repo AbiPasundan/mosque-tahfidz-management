@@ -27,5 +27,12 @@ export const useLogin = () => {
         queryKey: ["me"],
       });
     },
+    onError: (error) => {
+      // Ambil pesan error dari backend, atau gunakan pesan default
+      const errorMessage = error.message || "Terjadi kesalahan saat login. Silakan coba lagi.";
+
+      console.error("[Login Error]:", errorMessage);
+      queryClient.clear();
+    },
   });
 };
