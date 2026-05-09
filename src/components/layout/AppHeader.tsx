@@ -1,6 +1,6 @@
-import { useSidebarStore } from '@/store/sidebarStore';
+import { useSidebarStore } from '@/stores/sidebarStore';
 import { LuMenu, LuBell, LuCircleHelp } from 'react-icons/lu';
-import { SearchBar } from '@/components/shared/SearchBar';
+import { SearchBar } from '@/components/ui/SearchBar';
 
 export function AppHeader() {
   const { toggle } = useSidebarStore();
