@@ -1,17 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { cn } from '@/utils/cn';
-import {
-  LuPlus,
-  LuUpload,
-  LuSave,
-  LuChevronRight,
-  LuCircleCheck,
-  LuRepeat,
-  LuSparkles,
-  LuClock,
-  LuLightbulb,
-} from 'react-icons/lu';
+import { LuPlus, LuUpload, LuSave, LuChevronRight, LuCircleCheck, LuRepeat, LuSparkles, LuClock, LuLightbulb, } from 'react-icons/lu';
+import ProgressBreadcrumb from '@/features/progressTracking/ProgressBreadcrumb';
 
 /* ─── Queue entries ─── */
 const queueEntries = [
@@ -27,13 +18,7 @@ export default function ProgressPage() {
 
   return (
     <div className="space-y-lg">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-xs text-[12px] text-muted">
-        <Link to="/progress" className="hover:text-primary transition-colors">Progress Tracking</Link>
-        <LuChevronRight className="w-3 h-3" />
-        <span className="text-primary font-medium">New Entry</span>
-      </div>
-
+      <ProgressBreadcrumb />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md">
         <div>
