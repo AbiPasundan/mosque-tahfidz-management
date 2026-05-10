@@ -1,175 +1,160 @@
-import { LuChevronLeft, LuChevronRight, LuFilter, LuDownload } from 'react-icons/lu';
-import { useState } from 'react';
-import { DataTable } from '@/components/ui/Table';
+import { useMemo, useState } from "react";
+import {
+    useReactTable,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    getPaginationRowModel,
+    flexRender,
+    type SortingState,
+    type ColumnFiltersState,
+} from "@tanstack/react-table";
+import { cn } from "@/utils/cn";
+import { useStudents } from "../hooks/useStudents";
+import { TableSkeleton } from "@/components/ui/LoadingSkeleton";
+import type { Student } from "../types/student";
+import { DEFAULT_PAGE_SIZE } from "../constants/studentTable";
+import { globalFilterFn } from "../utils/studentTableHelpers";
+import { studentColumns } from "./StudentTableColumns";
+import { StudentTableToolbar } from "./StudentTableToolbar";
+import { StudentTablePagination } from "./StudentTablePagination";
+import { StudentTableEmptyState } from "./StudentTableEmptyState";
+import { SortIcon } from "./SortIcon";
 
-export interface Student {
-    id: string | number;
-    name: string;
-    nis: string;
-    age: number;
-    memorization: string;
-    completionRate: number;
-    status: string;
-    lastActivity: string;
-}
+function StudentTable() {
+    const [globalFilter, setGlobalFilter] = useState("");
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-export interface FilterProps {
-    levelFilter: string;
-    setLevelFilter: (level: string) => void;
-    statusFilter: string;
-    setStatusFilter: (status: string) => void;
-    setCurrentPage: (page: number) => void;
-}
+    const { data, isLoading } = useStudents();
+    const students: Student[] = useMemo(() => data?.data || [], [data]);
 
-export interface PaginationProps {
-    currentPage: number;
-    setCurrentPage: (page: number | ((prev: number) => number)) => void;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-}
+    const table = useReactTable({
+        data: students,
+        columns: studentColumns,
+        state: { globalFilter, sorting, columnFilters },
+        onGlobalFilterChange: setGlobalFilter,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        globalFilterFn,
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        initialState: {
+            pagination: { pageSize: DEFAULT_PAGE_SIZE },
+        },
+    });
 
-export interface TableProps {
-    students: Student[];
-}
+    // Derive current status filter from column filters
+    const statusFilterValue =
+        (columnFilters.find((f) => f.id === "status")?.value as string) ?? "all";
 
-interface StatCardProps {
-    title: string;
-    value: string | number;
-    isPrimaryBorder?: boolean;
-}
+    const handleStatusFilter = (value: string) => {
+        if (value === "all") {
+            setColumnFilters((prev) => prev.filter((f) => f.id !== "status"));
+        } else {
+            setColumnFilters((prev) => [
+                ...prev.filter((f) => f.id !== "status"),
+                { id: "status", value },
+            ]);
+        }
+        table.setPageIndex(0);
+    };
 
-export const StatCard = ({ title, value, isPrimaryBorder }: StatCardProps) => (
-    <div className={`bg-surface-container-lowest rounded-xl px-lg py-md min-w-32.5 ${isPrimaryBorder ? 'border-2 border-primary/20' : 'border border-border-card'}`}>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-primary">{title}</p>
-        <p className="text-[24px] font-bold text-on-surface font-[Manrope] leading-tight mt-xs">{value}</p>
-    </div>
-);
+    const handleGlobalFilterChange = (value: string) => {
+        setGlobalFilter(value);
+        table.setPageIndex(0);
+    };
 
-export const FilterBar = ({ levelFilter, setLevelFilter, statusFilter, setStatusFilter, setCurrentPage }: FilterProps) => {
-    return (
-        <div className="flex-1 flex flex-wrap items-center gap-md bg-surface-container-lowest rounded-xl border border-border-card px-lg py-md">
-            <div className="flex items-center gap-sm">
-                <span className="text-[12px] font-semibold text-muted uppercase tracking-wider">Level:</span>
-                <select
-                    value={levelFilter}
-                    onChange={(e) => setLevelFilter(e.target.value)}
-                    className="text-[13px] px-md py-1.5 rounded-lg border border-border-card bg-surface-container-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
-                >
-                    <option value="all">All Levels</option>
-                    <option value="beginner">Beginner</option>
-                    {/* ... options lainnya ... */}
-                </select>
-            </div>
+    const hasActiveFilters = globalFilter !== "" || statusFilterValue !== "all";
 
-            <div className="flex items-center gap-sm">
-                <span className="text-[12px] font-semibold text-muted uppercase tracking-wider">Status:</span>
-                <select
-                    value={statusFilter}
-                    onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-                    className="text-[13px] px-md py-1.5 rounded-lg border border-border-card bg-surface-container-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
-                >
-                    <option value="all">All Status</option>
-                    {/* ... options lainnya ... */}
-                </select>
-            </div>
+    const clearAllFilters = () => {
+        setGlobalFilter("");
+        setColumnFilters([]);
+    };
 
-            <div className="flex items-center gap-xs ml-auto">
-                <button className="p-2 rounded-lg hover:bg-surface-container transition-colors" aria-label="Filters">
-                    <LuFilter className="w-4 h-4 text-muted" />
-                </button>
-                <button className="p-2 rounded-lg hover:bg-surface-container transition-colors" aria-label="Download">
-                    <LuDownload className="w-4 h-4 text-muted" />
-                </button>
-            </div>
-        </div>
-    );
-};
-
-// import { cn } from '...'; // Pastikan utility cn kamu ter-import
-
-export const Pagination = ({ currentPage, setCurrentPage, pageSize, totalItems, totalPages }: PaginationProps) => {
-    return (
-        <div className="flex items-center justify-between px-lg py-md border-t border-border-card">
-            <p className="text-[12px] text-muted">
-                Showing {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)} of{' '}
-                {totalItems.toLocaleString()} students
-            </p>
-            <div className="flex items-center gap-xs">
-                <button
-                    onClick={() => setCurrentPage((p: number) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="p-1.5 rounded-lg border border-border-card hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                    <LuChevronLeft className="w-4 h-4" />
-                </button>
-
-                {/* Render nomor halaman di sini (ambil dari kodemu sebelumnya) */}
-
-                <button
-                    onClick={() => setCurrentPage((p: number) => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="p-1.5 rounded-lg border border-border-card hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                    <LuChevronRight className="w-4 h-4" />
-                </button>
-            </div>
-        </div>
-    );
-};
-
-export const StudentTable = ({ students }: TableProps) => {
-    return (
-        <div className="overflow-x-auto">
-            {/* <DataTable /> */}
-            {/* <DataTable columns={historyColumns} data={recentHistory} /> */}
-            <table className="w-full min-w-200">
-                <thead>
-                    {/* Header tabel... */}
-                </thead>
-                <tbody>
-                    {students.map((student, i) => (
-                        <tr key={student.id}>
-                            {/* Isi tr sesuai kode aslimu */}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
-};
-
-
-
-
-export default function StudentDashboard() {
-    const [levelFilter, setLevelFilter] = useState('all');
-    const [statusFilter, setStatusFilter] = useState('all');
-    const [currentPage, setCurrentPage] = useState(1);
-
-    const activeToday = 45;
-    const pageSize = 10;
-    const filtered = [];
-    const paginated: any = [];
-    const totalPages = Math.ceil(filtered.length / pageSize);
+    if (isLoading) return <TableSkeleton />;
 
     return (
-        <div className="flex flex-col gap-md">
-            <div className="flex flex-col lg:flex-row gap-md">
-                <FilterBar levelFilter={levelFilter} setLevelFilter={setLevelFilter} statusFilter={statusFilter} setStatusFilter={setStatusFilter} setCurrentPage={setCurrentPage} />
+        <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
+            {/* ── Toolbar ─────────────────────────────────────────────── */}
+            <StudentTableToolbar
+                globalFilter={globalFilter}
+                onGlobalFilterChange={handleGlobalFilterChange}
+                statusFilter={statusFilterValue}
+                onStatusFilterChange={handleStatusFilter}
+                hasActiveFilters={hasActiveFilters}
+                onClearAllFilters={clearAllFilters}
+            />
 
-                <div className="flex gap-md shrink-0">
-                    <StatCard title="Active Today" value={activeToday} />
-                    <StatCard title="New Students" value={12} isPrimaryBorder />
-                </div>
+            {/* ── Table ───────────────────────────────────────────────── */}
+            <div className="overflow-x-auto">
+                <table className="w-full min-w-200">
+                    <thead>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <tr
+                                key={headerGroup.id}
+                                className="border-b border-border-card bg-surface-container-low/50"
+                            >
+                                {headerGroup.headers.map((header) => (
+                                    <th
+                                        key={header.id}
+                                        className={cn(
+                                            "text-left px-lg py-md text-[11px] font-semibold uppercase tracking-wider text-muted first:pl-lg last:pr-lg",
+                                            header.column.getCanSort() &&
+                                            "cursor-pointer select-none hover:text-on-surface transition-colors"
+                                        )}
+                                        onClick={header.column.getToggleSortingHandler()}
+                                    >
+                                        <div className="flex items-center gap-xs">
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                            {header.column.getCanSort() && (
+                                                <SortIcon direction={header.column.getIsSorted()} />
+                                            )}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody>
+                        {table.getRowModel().rows.length === 0 ? (
+                            <StudentTableEmptyState
+                                colSpan={studentColumns.length}
+                                hasActiveFilters={hasActiveFilters}
+                                onClearFilters={clearAllFilters}
+                            />
+                        ) : (
+                            table.getRowModel().rows.map((row) => (
+                                <tr
+                                    key={row.id}
+                                    className="border-b border-border-card last:border-0 hover:bg-surface-container-low/30 transition-colors"
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <td key={cell.id} className="px-lg py-md">
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
             </div>
 
-            <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
-                <StudentTable students={paginated} />
-
-                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pageSize={pageSize} totalItems={filtered.length} totalPages={totalPages} />
-            </div>
-
+            {/* ── Pagination ──────────────────────────────────────────── */}
+            <StudentTablePagination table={table} />
         </div>
     );
 }
+
+export default StudentTable;
