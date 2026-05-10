@@ -8,7 +8,7 @@ import { Link } from 'react-router';
 import type { Student } from '@/constants/mockData';
 import { mockStudents } from '@/constants/mockData';
 import { DataTable } from '@/components/ui/Table';
-import Breadcrumb from '@/features/students/components/Breadcrumb';
+import Breadcrumb from '@/features/students/components/StudentBreadcrumb';
 import StudentHeader from '@/features/students/components/StudentHeader';
 import StudentDashboard from '@/features/students/components/StudentTable';
 import { useStudents } from '@/features/students/hooks/useStudents';
