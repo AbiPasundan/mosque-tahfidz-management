@@ -1,18 +1,18 @@
 import { cn } from '@/utils/cn';
-import type { RegisterOptions, UseFormRegister } from 'react-hook-form';
+import type { FieldErrors, FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form';
 
-interface FormFieldProps {
+interface FormFieldProps<T extends FieldValues> {
   label: string;
-  name: string;
-  register: UseFormRegister<any>;
-  rules?: RegisterOptions;
-  errors?: Record<string, { message?: string }>;
+  name: Path<T>;
+  register: UseFormRegister<T>;
+  rules?: RegisterOptions<T, Path<T>>;
+  errors?: FieldErrors<T>;
   type?: string;
   placeholder?: string;
   icon?: React.ReactNode;
 }
 
-export function FormField({
+export function FormField<T extends FieldValues>({
   label,
   name,
   register,
@@ -21,7 +21,7 @@ export function FormField({
   type = 'text',
   placeholder,
   icon,
-}: FormFieldProps) {
+}: FormFieldProps<T>) {
   const error = errors?.[name];
 
   return (
@@ -51,7 +51,7 @@ export function FormField({
           aria-invalid={error ? 'true' : 'false'}
         />
       </div>
-      {error && <p className="mt-sm text-label-sm text-error">{error.message}</p>}
+      {error && <p className="mt-sm text-label-sm text-error">{String(error.message || '')}</p>}
     </div>
   );
 }
