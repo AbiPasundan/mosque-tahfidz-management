@@ -1,4 +1,3 @@
-import { cn } from '@/utils/cn';
 import { flexRender, type Table } from '@tanstack/react-table';
 import { LuArrowUpDown } from 'react-icons/lu';
 import type { Student } from '@/constants/mockData';
