@@ -9,7 +9,7 @@ import { getInitials } from "../utils/studentTableHelpers";
 
 const columnHelper = createColumnHelper<Student>();
 
-export const studentColumns: ColumnDef<Student, any>[] = [
+export const studentColumns: ColumnDef<Student>[] = [
     columnHelper.accessor("name", {
         header: "Name",
         enableSorting: true,
