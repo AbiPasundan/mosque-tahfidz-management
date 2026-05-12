@@ -1,0 +1,178 @@
+import { useState } from 'react';
+import { useParams } from 'react-router';
+import { cn } from '@/utils/cn';
+import { LuPlus, LuCalendar, LuUser } from 'react-icons/lu';
+import { useStudent } from '@/features/students/hooks/useStudent';
+import { useProgress } from '@/features/progressTracking/hooks/useProgress';
+
+const tabs = ['Overview', 'Progress', 'History', 'Murojaah', 'Notes'];
+
+interface ProgressRecord {
+    id: string;
+    surah_name: string;
+    ayat_start: number;
+    ayat_end: number;
+    notes: string;
+    created_at: string;
+    mentor_name?: string;
+    status: string;
+}
+
+function StudentDetailMainRight() {
+    const { id } = useParams<{ id: string }>();
+    const [activeTab, setActiveTab] = useState('Overview');
+
+    const { data: studentResponse } = useStudent(id);
+    const student = studentResponse?.data;
+
+    const { data: progressResponse } = useProgress({ student_id: id });
+    const progress = progressResponse?.data || [];
+
+    if (!student) return null;
+
+    return (
+        <div className="space-y-lg">
+            {/* Tabs */}
+            <div className="border-b border-border-card">
+                <div className="flex gap-lg overflow-x-auto">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={cn(
+                                'pb-md text-[14px] font-medium whitespace-nowrap transition-colors relative',
+                                activeTab === tab
+                                    ? 'text-primary'
+                                    : 'text-muted hover:text-on-surface-variant'
+                            )}
+                        >
+                            {tab}
+                            {activeTab === tab && (
+                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                            )}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Tab content — Overview */}
+            {activeTab === 'Overview' && (
+                <div className="space-y-lg">
+                    {/* Hafalan Summary header */}
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="text-[17px] font-semibold text-on-surface font-[Manrope]">Hafalan Summary</h3>
+                            <p className="text-[13px] text-muted mt-0.5">Current memorization tracking and milestones</p>
+                        </div>
+                        <button className="flex items-center gap-sm px-md py-1.75 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors">
+                            <LuPlus className="w-4 h-4" />
+                            Add Entry
+                        </button>
+                    </div>
+
+                    {/* Juz Progress + Current Surah cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+                        <div className="bg-surface-container-lowest rounded-xl border border-border-card p-lg">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <h4 className="text-[15px] font-semibold text-on-surface">Juz Progress</h4>
+                                    <p className="text-[12px] text-muted mt-0.5">Level: {student.learning_level}</p>
+                                </div>
+                                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                    <LuCalendar className="w-4 h-4 text-primary" />
+                                </div>
+                            </div>
+                            <div className="mt-md">
+                                <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-primary rounded-full transition-all"
+                                        style={{ width: `70%` }} // Placeholder if completionRate is not in API
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between mt-sm">
+                                    <span className="text-[11px] text-muted">{student.learning_level} - Ongoing</span>
+                                    <span className="text-[11px] font-semibold text-primary">70% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-surface-container-lowest rounded-xl border border-border-card p-lg">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <h4 className="text-[11px] font-semibold text-muted uppercase tracking-wider">Fluency</h4>
+                                    <p className="text-[18px] font-bold text-on-surface font-[Manrope] mt-xs">{student.fluency}</p>
+                                </div>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-50 text-amber-700">
+                                    {student.status.toUpperCase()}
+                                </span>
+                            </div>
+                            <p className="text-[13px] text-muted mt-sm">Recent progress recorded on {student.last_progress ? new Date(student.last_progress).toLocaleDateString() : 'N/A'}</p>
+                        </div>
+                    </div>
+
+                    {/* Learning History Timeline */}
+                    <div>
+                        <h3 className="text-[17px] font-semibold text-on-surface font-[Manrope] flex items-center gap-sm mb-lg">
+                            <span className="text-lg">🕐</span> Learning History
+                        </h3>
+                        <div className="space-y-lg relative">
+                            {/* Timeline line */}
+                            <div className="absolute left-2.75 top-3 bottom-3 w-0.5 bg-border-card" />
+
+                            {progress.length > 0 ? (
+                                progress.map((record: ProgressRecord, i: number) => (
+                                    <div key={record.id} className="flex items-start gap-md relative">
+                                        <div
+                                            className={cn(
+                                                'w-6 h-6 rounded-full border-2 shrink-0 z-10',
+                                                i === 0
+                                                    ? 'bg-primary border-primary'
+                                                    : 'bg-surface-container-lowest border-border-card'
+                                            )}
+                                        />
+                                        <div className="flex-1 bg-surface-container-lowest rounded-xl border border-border-card p-md -mt-0.5">
+                                            <div className="flex items-start justify-between">
+                                                <div>
+                                                    <p className="text-[14px] font-semibold text-on-surface">
+                                                        {record.surah_name} (Ayat {record.ayat_start}-{record.ayat_end})
+                                                    </p>
+                                                    <p className="text-[12px] text-muted mt-0.5">{record.notes}</p>
+                                                </div>
+                                                <span className="text-[11px] text-muted shrink-0">{new Date(record.created_at).toLocaleDateString()}</span>
+                                            </div>
+                                            <div className="flex items-center gap-sm mt-sm">
+                                                <span className="flex items-center gap-xs px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">
+                                                    <LuUser className="w-3 h-3" />
+                                                    {record.mentor_name || 'Ustadz'}
+                                                </span>
+                                                <span className={cn(
+                                                    'px-2 py-0.5 rounded-full text-[10px] font-semibold',
+                                                    record.status === 'LANCAR' ? 'bg-emerald-50 text-emerald-700' :
+                                                        record.status === 'MENGULANG' ? 'bg-amber-50 text-amber-700' :
+                                                            'bg-blue-50 text-blue-700'
+                                                )}>
+                                                    ✓ {record.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-[13px] text-muted ml-10">No progress records yet.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Placeholder for other tabs */}
+            {activeTab !== 'Overview' && (
+                <div className="bg-surface-container-lowest rounded-xl border border-border-card p-xl text-center">
+                    <p className="text-[14px] text-muted">{activeTab} content will appear here.</p>
+                </div>
+            )}
+        </div>
+    )
+}
+
+export default StudentDetailMainRight
