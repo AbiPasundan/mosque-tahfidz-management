@@ -1,5 +1,4 @@
 import { LuShield, LuPlus, LuTrash2, LuPencil } from 'react-icons/lu';
-import { cn } from '@/utils/cn';
 import { Link } from 'react-router';
 
 interface Role {

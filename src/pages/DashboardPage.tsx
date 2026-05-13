@@ -1,7 +1,6 @@
 import { DashboardCard } from '@/features/dashboard/components/DashboardCard';
 import { QuickActionsCard, type QuickActionItem } from '@/features/dashboard/components/QuickActionsCard';
 import { LiveUpdatesCard, type LiveUpdateItem } from '@/features/dashboard/components/LiveUpdatesCard';
-import { TrendIndicator } from '@/components/ui/TrendIndicator';
 import {
   LuUsers,
   LuCircleCheck,
@@ -67,7 +66,7 @@ const recentHistory = [
 ];
 
 export default function DashboardPage() {
-  const { data, isLoading, isError } = useDashboardCard();
+  const { data, isLoading } = useDashboardCard();
   console.log(data?.data);
 
 

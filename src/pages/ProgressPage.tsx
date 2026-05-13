@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
 import { cn } from '@/utils/cn';
-import { LuPlus, LuUpload, LuSave, LuChevronRight, LuCircleCheck, LuRepeat, LuSparkles, LuClock, LuLightbulb, } from 'react-icons/lu';
+import { LuPlus, LuUpload, LuSave, LuCircleCheck, LuRepeat, LuSparkles, } from 'react-icons/lu';
 import ProgressBreadcrumb from '@/features/progressTracking/components/ProgressBreadcrumb';
 import ProgressBottomCards from '@/features/progressTracking/components/ProgressBottomCards';
 

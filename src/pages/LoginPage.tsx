@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { LuMail, LuLock, LuEye, LuEyeOff, LuTrendingUp, LuLayoutDashboard } from 'react-icons/lu';
 import { useLogin } from '@/features/auth/hooks/useLogin';
 import { loginSchema, type LoginFormValues } from '@/validations/auth';
+import axios from 'axios';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +31,12 @@ export default function LoginPage() {
     try {
       await loginMutation.mutateAsync(formData);
       navigate("/");
-    } catch (error: any) {
-      const message = error?.response?.data?.message || "Invalid credentials";
+    } catch (error: unknown) {
+      let message = "Invalid credentials";
+
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.message || message;
+      }
 
       setError("email", { type: "server", message });
       setError("password", { type: "server", message });
