@@ -7,7 +7,14 @@ export type LoginPayload = {
 };
 
 export type LoginResponse = {
-  data: any;
+  data: {
+    user: {
+      email: string;
+      name: string;
+      role: 'admin' | 'teacher' | 'staff';
+    };
+    token: string;
+  };
   message: string;
   success: boolean;
 };
