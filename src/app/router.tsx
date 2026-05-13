@@ -8,7 +8,7 @@ import SearchPage from '@/pages/SearchPage';
 import ProgressPage from '@/pages/ProgressPage';
 import HistoryPage from '@/pages/HistoryPage';
 import SettingsPage from '@/pages/SettingsPage';
-import RolesPage from '@/pages/RolesPage';
+import MentorPage from '@/pages/Mentor';
 
 export function AppRouter() {
   return (
@@ -22,7 +22,7 @@ export function AppRouter() {
         <Route path="/progress" element={<ProgressPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/mentor" element={<RolesPage />} />
+        <Route path="/mentor" element={<MentorPage />} />
       </Route>
     </Routes>
   );
