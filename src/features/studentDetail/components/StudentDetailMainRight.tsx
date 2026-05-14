@@ -1,34 +1,29 @@
 import { useState } from 'react';
-import { useParams } from 'react-router';
 import { cn } from '@/utils/cn';
 import { LuPlus, LuCalendar, LuUser } from 'react-icons/lu';
-import { useStudent } from '@/features/students/hooks/useStudent';
 import { useProgress } from '@/features/progressTracking/hooks/useProgress';
+import type { Student } from '@/features/students/types/student';
 
 const tabs = ['Overview', 'Progress', 'History', 'Murojaah', 'Notes'];
 
 interface ProgressRecord {
     id: string;
-    surah_name: string;
+    student_id: string;
+    mentor_id: string;
+    surah: string;
+    status: string;
     ayat_start: number;
     ayat_end: number;
     notes: string;
-    created_at: string;
+    progress_date: string;
     mentor_name?: string;
-    status: string;
 }
 
-function StudentDetailMainRight() {
-    const { id } = useParams<{ id: string }>();
+function StudentDetailMainRight({ student }: { student: Student }) {
     const [activeTab, setActiveTab] = useState('Overview');
 
-    const { data: studentResponse } = useStudent(id);
-    const student = studentResponse?.data;
-
-    const { data: progressResponse } = useProgress({ student_id: id });
+    const { data: progressResponse } = useProgress({ student_id: student.id });
     const progress = progressResponse?.data || [];
-
-    if (!student) return null;
 
     return (
         <div className="space-y-lg">
@@ -86,12 +81,12 @@ function StudentDetailMainRight() {
                                 <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden">
                                     <div
                                         className="h-full bg-primary rounded-full transition-all"
-                                        style={{ width: `70%` }} // Placeholder if completionRate is not in API
+                                        style={{ width: `100%` }} // We don't have percentage yet in DB
                                     />
                                 </div>
                                 <div className="flex items-center justify-between mt-sm">
                                     <span className="text-[11px] text-muted">{student.learning_level} - Ongoing</span>
-                                    <span className="text-[11px] font-semibold text-primary">70% Complete</span>
+                                    <span className="text-[11px] font-semibold text-primary">Active</span>
                                 </div>
                             </div>
                         </div>
@@ -100,13 +95,18 @@ function StudentDetailMainRight() {
                             <div className="flex items-start justify-between">
                                 <div>
                                     <h4 className="text-[11px] font-semibold text-muted uppercase tracking-wider">Fluency</h4>
-                                    <p className="text-[18px] font-bold text-on-surface font-[Manrope] mt-xs">{student.fluency}</p>
+                                    <p className="text-[18px] font-bold text-on-surface font-[Manrope] mt-xs">{student.fluency || 'Not set'}</p>
                                 </div>
-                                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-50 text-amber-700">
+                                <span className={cn(
+                                    "px-2 py-0.5 rounded text-[10px] font-bold uppercase",
+                                    student.status === 'Active' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                                )}>
                                     {student.status.toUpperCase()}
                                 </span>
                             </div>
-                            <p className="text-[13px] text-muted mt-sm">Recent progress recorded on {student.last_progress ? new Date(student.last_progress).toLocaleDateString() : 'N/A'}</p>
+                            <p className="text-[13px] text-muted mt-sm">
+                                Recent progress recorded on {student.last_progress ? new Date(student.last_progress).toLocaleDateString() : 'N/A'}
+                            </p>
                         </div>
                     </div>
 
@@ -134,11 +134,11 @@ function StudentDetailMainRight() {
                                             <div className="flex items-start justify-between">
                                                 <div>
                                                     <p className="text-[14px] font-semibold text-on-surface">
-                                                        {record.surah_name} (Ayat {record.ayat_start}-{record.ayat_end})
+                                                        {record.surah} (Ayat {record.ayat_start}-{record.ayat_end})
                                                     </p>
                                                     <p className="text-[12px] text-muted mt-0.5">{record.notes}</p>
                                                 </div>
-                                                <span className="text-[11px] text-muted shrink-0">{new Date(record.created_at).toLocaleDateString()}</span>
+                                                <span className="text-[11px] text-muted shrink-0">{new Date(record.progress_date).toLocaleDateString()}</span>
                                             </div>
                                             <div className="flex items-center gap-sm mt-sm">
                                                 <span className="flex items-center gap-xs px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">
