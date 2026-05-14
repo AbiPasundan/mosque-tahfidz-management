@@ -6,7 +6,7 @@ export const useLogout = () => {
 
     return useMutation({
         mutationFn: async () => {
-            const { data } = await api.post("/auth/logout");
+            const { data } = await api.post("/api/v1/auth/logout");
             return data;
         },
 

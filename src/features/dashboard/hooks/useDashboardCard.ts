@@ -5,7 +5,7 @@ export const useDashboardCard = () => {
   return useQuery({
     queryKey: ["dashboardCard"],
     queryFn: async () => {
-      const { data } = await api.get("/dashboard/summary");
+      const { data } = await api.get("/api/v1/dashboard/summary");
 
       return data;
     },

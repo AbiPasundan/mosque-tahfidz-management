@@ -5,7 +5,7 @@ export const useStudents = () => {
   return useQuery({
     queryKey: ["students"],
     queryFn: async () => {
-      const { data } = await api.get("/students");
+      const { data } = await api.get("/api/v1/students");
 
       return data;
     },

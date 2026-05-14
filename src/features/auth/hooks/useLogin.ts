@@ -23,8 +23,8 @@ export const useLogin = () => {
   const queryClient = useQueryClient();
 
   return useMutation<LoginResponse, Error, LoginPayload>({
-    mutationFn: async (payload) => {
-      const { data } = await api.post("/auth/login", payload);
+    mutationFn: async (payload: LoginPayload) => {
+      const { data } = await api.post("/api/v1/auth/login", payload);
 
       return data;
     },

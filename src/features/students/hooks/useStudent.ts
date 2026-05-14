@@ -6,7 +6,7 @@ export const useStudent = (id?: string) => {
     queryKey: ["student", id],
     queryFn: async () => {
       if (!id) throw new Error("Student ID is required");
-      const { data } = await api.get(`/students/${id}`);
+      const { data } = await api.get(`/api/v1/students/${id}`);
 
       return data;
     },

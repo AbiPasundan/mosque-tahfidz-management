@@ -5,7 +5,7 @@ export const useMe = () => {
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const { data } = await api.get("/auth/me");
+      const { data } = await api.get("/api/v1/auth/me");
 
       return data;
     },
