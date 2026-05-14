@@ -9,6 +9,7 @@ export interface Student {
     learning_level: string;
     last_progress: string;
     fluency: string;
+    contact: string;
     status: "Active" | "Pending" | "Inactive" | "Graduated";
     join_date: string;
     created_at: string;
