@@ -10,3 +10,10 @@ export interface Surah {
   namaLatin: string;
   jumlahAyat: number;
 }
+
+export interface SurahSelectorProps {
+  surahs: Surah[];
+  selectedSurah: Surah | null;
+  onSelect: (surah: Surah | null) => void;
+  isLoading?: boolean;
+}
