@@ -13,14 +13,10 @@ export function getInitials(name: string): string {
 export const globalFilterFn: FilterFn<Student> = (row, _columnId, filterValue) => {
     const search = (filterValue as string).toLowerCase();
     const name = (row.getValue("name") as string).toLowerCase();
-    const nis = ((row.original as any).nis ?? "").toLowerCase();
-    const className = ((row.original as any).class ?? "").toLowerCase();
     const level = (row.getValue("learning_level") as string).toLowerCase();
 
     return (
         name.includes(search) ||
-        nis.includes(search) ||
-        className.includes(search) ||
         level.includes(search)
     );
 };
