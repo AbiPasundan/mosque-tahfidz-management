@@ -22,20 +22,20 @@ function StudentDetailBottomCard({ student }: { student: Student }) {
     return (
         <div className="bg-surface-container-lowest rounded-xl border border-border-card p-lg">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-lg">
-                <StudentDetailBottomCardUtils 
-                    icon={RxActivityLog} 
-                    title="Last Activity" 
-                    content={student.last_progress ? new Date(student.last_progress).toLocaleDateString() : 'No activity'} 
+                <StudentDetailBottomCardUtils
+                    icon={RxActivityLog}
+                    title="Last Activity"
+                    content={student.last_progress ? new Date(student.last_progress).toLocaleDateString() : 'No activity'}
                 />
-                <StudentDetailBottomCardUtils 
-                    icon={FaUser} 
-                    title="Mentor ID" 
-                    content={student.mentor_id.slice(0, 8)} 
+                <StudentDetailBottomCardUtils
+                    icon={FaUser}
+                    title="Assigned Mentor"
+                    content={student.mentor_name || 'Not assigned'}
                 />
-                <StudentDetailBottomCardUtils 
-                    icon={LuMessageSquare} 
-                    title="Student Status" 
-                    content={student.status} 
+                <StudentDetailBottomCardUtils
+                    icon={LuMessageSquare}
+                    title="Student Status"
+                    content={student.status}
                 />
             </div>
         </div>

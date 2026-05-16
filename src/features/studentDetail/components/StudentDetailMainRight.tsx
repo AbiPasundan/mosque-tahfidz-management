@@ -121,7 +121,7 @@ function StudentDetailMainRight({ student }: { student: Student }) {
 
                             {progress.length > 0 ? (
                                 progress.map((record: ProgressRecord, i: number) => (
-                                    <div key={record.id} className="flex items-start gap-md relative">
+                                    <div key={record.mentor_name} className="flex items-start gap-md relative">
                                         <div
                                             className={cn(
                                                 'w-6 h-6 rounded-full border-2 shrink-0 z-10',

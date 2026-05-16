@@ -59,15 +59,15 @@ function StudentDetailMainLeft({ student }: { student: Student }) {
                 <div className="grid grid-cols-2 gap-md">
                     <div>
                         <p className="text-[11px] text-muted">Last Update</p>
-                        <p className="text-[16px] font-bold text-on-surface font-[Manrope]">
-                            {student.last_progress ? formatDistanceToNow(new Date(student.last_progress), { addSuffix: true }) : 'No progress'}
+                        <p className="text-[15px] font-bold text-on-surface font-[Manrope]">
+                            {student.last_progress ? formatDistanceToNow(new Date(student.last_progress), { addSuffix: true }) : 'Never'}
                         </p>
                     </div>
                     <div>
-                        <p className="text-[11px] text-muted">Performance</p>
+                        <p className="text-[11px] text-muted">Fluency</p>
                         <p className="text-[14px] font-medium text-emerald-600 flex items-center gap-xs">
                             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                            {student.fluency || 'Active'}
+                            {student.fluency || 'Not assessed'}
                         </p>
                     </div>
                 </div>
