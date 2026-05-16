@@ -47,7 +47,7 @@ export default function ProgressPage() {
         status: entry.status,
         notes: entry.notes
       }));
-      
+
       await bulkCreateMutation.mutateAsync({ items });
       toast.success('Successfully submitted session progress');
       setQueue([]);
@@ -59,15 +59,15 @@ export default function ProgressPage() {
   return (
     <div className="space-y-lg">
       <ProgressBreadcrumb />
-      
-      <ProgressHeader 
+
+      <ProgressHeader
         onSubmit={submitSession}
         isPending={bulkCreateMutation.isPending}
         queueLength={queue.length}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-lg">
-        <ProgressEntryForm 
+        <ProgressEntryForm
           students={students}
           surahs={surahs || []}
           currentUserId={currentUserId}
@@ -77,7 +77,7 @@ export default function ProgressPage() {
         />
 
         <div className="space-y-lg">
-          <ProgressQueue 
+          <ProgressQueue
             queue={queue}
             onRemove={removeFromQueue}
             onSubmit={submitSession}
