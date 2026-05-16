@@ -1,4 +1,4 @@
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { LuEllipsisVertical } from "react-icons/lu";
 import { Link } from "react-router";
 import { cn } from "@/utils/cn";
@@ -75,21 +75,24 @@ export const studentColumns = [
         },
         cell: (info) => <StudentStatusBadge status={info.getValue()} />,
     }),
-    columnHelper.accessor("join_date", {
+    columnHelper.accessor("last_progress", {
         header: "Last Progress",
         enableSorting: true,
-        cell: (info) => (
-            <span className="text-[13px] text-on-surface-variant">
-                {new Date(info.getValue()).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                })}
-            </span>
-        ),
+        cell: (info) => {
+            const val = info.getValue();
+            return (
+                <span className="text-[13px] text-on-surface-variant">
+                    {val ? new Date(val).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                    }) : "No activity"}
+                </span>
+            );
+        },
         sortingFn: (rowA, rowB) => {
-            const a = new Date(rowA.getValue("join_date") as string).getTime();
-            const b = new Date(rowB.getValue("join_date") as string).getTime();
+            const a = new Date(rowA.getValue("last_progress") as string || 0).getTime();
+            const b = new Date(rowB.getValue("last_progress") as string || 0).getTime();
             return a - b;
         },
     }),
