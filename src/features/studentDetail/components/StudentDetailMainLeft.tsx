@@ -1,15 +1,8 @@
-import { useParams } from 'react-router';
 import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
-import { useStudent } from '@/features/students/hooks/useStudent';
+import type { Student } from '@/features/students/types/student';
+import { formatDistanceToNow } from 'date-fns';
 
-function StudentDetailMainLeft() {
-    const { id } = useParams<{ id: string }>();
-
-    const { data: response } = useStudent(id);
-    const student = response?.data;
-
-    if (!student) return null;
-
+function StudentDetailMainLeft({ student }: { student: Student }) {
     const initials = student.name.split(' ').slice(0, 2).map((n: string) => n[0]).join('').toUpperCase();
 
     return (
@@ -65,22 +58,16 @@ function StudentDetailMainLeft() {
                 </h3>
                 <div className="grid grid-cols-2 gap-md">
                     <div>
-                        <p className="text-[11px] text-muted">Attendance</p>
-                        <p className="text-[20px] font-bold text-on-surface font-[Manrope]">96.4%</p>
-                    </div>
-                    <div>
-                        <p className="text-[11px] text-muted">Avg Score</p>
-                        <p className="text-[20px] font-bold text-on-surface font-[Manrope]">88/100</p>
-                    </div>
-                    <div>
                         <p className="text-[11px] text-muted">Last Update</p>
-                        <p className="text-[16px] font-bold text-on-surface font-[Manrope]">2h ago</p>
+                        <p className="text-[16px] font-bold text-on-surface font-[Manrope]">
+                            {student.last_progress ? formatDistanceToNow(new Date(student.last_progress), { addSuffix: true }) : 'No progress'}
+                        </p>
                     </div>
                     <div>
-                        <p className="text-[11px] text-muted">Status</p>
+                        <p className="text-[11px] text-muted">Performance</p>
                         <p className="text-[14px] font-medium text-emerald-600 flex items-center gap-xs">
                             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                            Excellent
+                            {student.fluency || 'Active'}
                         </p>
                     </div>
                 </div>
