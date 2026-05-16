@@ -17,8 +17,8 @@ export default function StudentDetailPage() {
   return (
     <div className="space-y-lg">
       <StudentDetailBreadcrumb name={student.name} />
-      <StudentDetailMain />
-      <StudentDetailBottomCard />
+      <StudentDetailMain student={student} />
+      <StudentDetailBottomCard student={student} />
     </div>
   );
 }
