@@ -13,6 +13,7 @@ export interface CreateProgressPayload {
   ayat_end: number;
   status: string;
   notes?: string;
+  mentor_name?: string;
 }
 
 export interface BulkCreateProgressPayload {
