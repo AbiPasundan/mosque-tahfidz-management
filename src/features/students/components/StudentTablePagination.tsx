@@ -6,11 +6,11 @@ import { getPaginationRange } from "../utils/studentTableHelpers";
 
 interface StudentTablePaginationProps<T> {
     table: Table<T>;
+    totalRows: number;
 }
 
-export function StudentTablePagination<T>({ table }: StudentTablePaginationProps<T>) {
+export function StudentTablePagination<T>({ table, totalRows }: StudentTablePaginationProps<T>) {
     const { pageIndex, pageSize } = table.getState().pagination;
-    const totalRows = table.getFilteredRowModel().rows.length;
     const totalPages = table.getPageCount();
 
     if (totalRows === 0) return null;
