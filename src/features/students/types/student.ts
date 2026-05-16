@@ -1,6 +1,7 @@
 export interface Student {
     id: string;
     mentor_id: string;
+    mentor_name?: string;
     name: string;
     password: string;
     profile_img: string;
