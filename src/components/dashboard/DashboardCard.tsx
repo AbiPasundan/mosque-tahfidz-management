@@ -27,7 +27,7 @@ export function DashboardCard({ label, value, subtitle, icon, className, childre
           </p>
         </div>
         {icon && (
-          <div className="w-10 h-10 rounded-xl bg-primary/[0.08] flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center shrink-0">
             {icon}
           </div>
         )}

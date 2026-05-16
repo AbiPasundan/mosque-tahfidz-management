@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { StudentStatusBadge } from '@/components/shared/StudentStatusBadge';
 import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
-import { LuPhone, LuUser, LuCalendar, LuPlus, LuTrophy, LuCalendarDays, LuMessageSquare, LuChevronRight } from 'react-icons/lu';
+import { LuUser, LuCalendar, LuPlus, LuTrophy, LuCalendarDays, LuMessageSquare, LuChevronRight } from 'react-icons/lu';
 import { mockStudents, mockProgressRecords } from '@/constants/mockData';
 import { useState } from 'react';
 import { cn } from '@/utils/cn';
@@ -48,7 +48,7 @@ export default function StudentDetailPage() {
           {/* Profile Card */}
           <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
             {/* Purple header */}
-            <div className="h-28 bg-gradient-to-br from-primary to-primary-container relative">
+            <div className="h-28 bg-linear-to-br from-primary to-primary-container relative">
               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
                 <div className="w-20 h-20 rounded-full bg-primary-container border-4 border-surface-container-lowest flex items-center justify-center text-on-primary text-[24px] font-bold">
                   {initials}
@@ -58,7 +58,7 @@ export default function StudentDetailPage() {
 
             <div className="pt-14 pb-lg px-lg text-center">
               <h2 className="text-[18px] font-bold text-on-surface font-[Manrope]">{student.name}</h2>
-              <p className="text-[12px] text-muted mt-[2px]">Student ID: #{student.nis}</p>
+              <p className="text-[12px] text-muted mt-0.5">Student ID: #{student.nis}</p>
 
               <div className="flex items-center justify-center gap-sm mt-md">
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
@@ -136,7 +136,7 @@ export default function StudentDetailPage() {
                 >
                   {tab}
                   {activeTab === tab && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
                   )}
                 </button>
               ))}
@@ -150,9 +150,9 @@ export default function StudentDetailPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-[17px] font-semibold text-on-surface font-[Manrope]">Hafalan Summary</h3>
-                  <p className="text-[13px] text-muted mt-[2px]">Current memorization tracking and milestones</p>
+                  <p className="text-[13px] text-muted mt-0.5">Current memorization tracking and milestones</p>
                 </div>
-                <button className="flex items-center gap-sm px-md py-[7px] rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors">
+                <button className="flex items-center gap-sm px-md py-1.75 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors">
                   <LuPlus className="w-4 h-4" />
                   Add Entry
                 </button>
@@ -164,7 +164,7 @@ export default function StudentDetailPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h4 className="text-[15px] font-semibold text-on-surface">Juz Progress</h4>
-                      <p className="text-[12px] text-muted mt-[2px]">Currently {student.memorization}</p>
+                      <p className="text-[12px] text-muted mt-0.5">Currently {student.memorization}</p>
                     </div>
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <LuCalendar className="w-4 h-4 text-primary" />
@@ -216,14 +216,14 @@ export default function StudentDetailPage() {
                 </h3>
                 <div className="space-y-lg relative">
                   {/* Timeline line */}
-                  <div className="absolute left-[11px] top-3 bottom-3 w-[2px] bg-border-card" />
+                  <div className="absolute left-2.75 top-3 bottom-3 w-0.5 bg-border-card" />
 
                   {progress.length > 0 ? (
                     progress.map((record, i) => (
                       <div key={record.id} className="flex items-start gap-md relative">
                         <div
                           className={cn(
-                            'w-6 h-6 rounded-full border-2 flex-shrink-0 z-10',
+                            'w-6 h-6 rounded-full border-2 shrink-0 z-10',
                             i === 0
                               ? 'bg-primary border-primary'
                               : 'bg-surface-container-lowest border-border-card'
@@ -235,9 +235,9 @@ export default function StudentDetailPage() {
                               <p className="text-[14px] font-semibold text-on-surface">
                                 {record.surah} (Verses {record.verses})
                               </p>
-                              <p className="text-[12px] text-muted mt-[2px]">{record.notes}</p>
+                              <p className="text-[12px] text-muted mt-0.5">{record.notes}</p>
                             </div>
-                            <span className="text-[11px] text-muted flex-shrink-0">{record.date}</span>
+                            <span className="text-[11px] text-muted shrink-0">{record.date}</span>
                           </div>
                           <div className="flex items-center gap-sm mt-sm">
                             <span className="flex items-center gap-xs px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">
@@ -247,8 +247,8 @@ export default function StudentDetailPage() {
                             <span className={cn(
                               'px-2 py-0.5 rounded-full text-[10px] font-semibold',
                               record.grade === 'Excellent' ? 'bg-emerald-50 text-emerald-700' :
-                              record.grade === 'Good' ? 'bg-blue-50 text-blue-700' :
-                              'bg-amber-50 text-amber-700'
+                                record.grade === 'Good' ? 'bg-blue-50 text-blue-700' :
+                                  'bg-amber-50 text-amber-700'
                             )}>
                               ✓ {record.grade}
                             </span>
