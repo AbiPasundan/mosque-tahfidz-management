@@ -51,8 +51,9 @@ export default function ProgressPage() {
       await bulkCreateMutation.mutateAsync({ items });
       toast.success('Successfully submitted session progress');
       setQueue([]);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to submit progress');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? (error as any).response?.data?.message || error.message : 'Failed to submit progress';
+      toast.error(message);
     }
   };
 
