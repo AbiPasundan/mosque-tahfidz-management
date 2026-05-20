@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export interface ProgressFilters {
   student_id?: string;
   date?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface CreateProgressPayload {
