@@ -11,7 +11,7 @@ export type LoginResponse = {
     user: {
       email: string;
       name: string;
-      role: 'admin' | 'teacher' | 'staff';
+      role: 'admin' | 'mentor' | 'student';
     };
     token: string;
   };
