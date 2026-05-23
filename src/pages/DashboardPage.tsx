@@ -124,7 +124,12 @@ export default function DashboardPage() {
 
         <DashboardCard label="ACTIVE TODAY" value={data?.data?.active_today} icon={<LuCircleCheck className="w-5 h-5 text-primary" />} />
 
-        <DashboardCard label="WEEKLY PROGRESS" value={data?.data?.weekly_progress_percentage} subtitle="" icon={<LuStar className="w-5 h-5 text-primary" />} >
+        <DashboardCard
+          label="WEEKLY PROGRESS"
+          value={data?.data?.weekly_progress_percentage !== undefined ? `${Number(data.data.weekly_progress_percentage).toFixed(1)}%` : '0%'}
+          subtitle=""
+          icon={<LuStar className="w-5 h-5 text-primary" />}
+        >
           {/* <TrendIndicator change="On target for Quran khatam" trend="up" label="" /> */}
         </DashboardCard>
       </div>
