@@ -1,5 +1,7 @@
 import { api } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/authStore";
+
 
 export type LoginPayload = {
   email: string;
@@ -21,6 +23,7 @@ export type LoginResponse = {
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
+  const { setUser, setToken } = useAuthStore();
 
   return useMutation<LoginResponse, Error, LoginPayload>({
     mutationFn: async (payload: LoginPayload) => {
@@ -29,11 +32,23 @@ export const useLogin = () => {
       return data;
     },
 
-    onSuccess: async () => {
+    onSuccess: async (response) => {
+      // Update global auth store
+      // response is the full JSON body { success: true, data: { user, token } }
+      if (response.success && response.data) {
+        setUser(response.data.user);
+        setToken(response.data.token);
+      }
+
+      // Clear all cache to prevent data contamination from previous user
+      queryClient.clear();
       await queryClient.invalidateQueries({
         queryKey: ["me"],
       });
     },
+
+
+
     onError: (error) => {
       // Ambil pesan error dari backend, atau gunakan pesan default
       const errorMessage = error.message || "Terjadi kesalahan saat login. Silakan coba lagi.";
