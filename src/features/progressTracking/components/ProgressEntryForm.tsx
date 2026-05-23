@@ -88,7 +88,7 @@ export function ProgressEntryForm({
         />
 
         <div>
-          <label className="block text-[13px] font-medium text-on-surface mb-[6px]">Status</label>
+          <label className="block text-[13px] font-medium text-on-surface mb-1.5">Status</label>
           <div className="grid grid-cols-3 gap-sm">
             {[
               { key: 'LANCAR', label: 'Lancar', icon: <LuCircleCheck className="w-5 h-5" /> },
@@ -100,7 +100,7 @@ export function ProgressEntryForm({
                 type="button"
                 onClick={() => setSelectedStatus(status.key)}
                 className={cn(
-                  'flex flex-col items-center gap-[4px] py-[10px] px-sm rounded-xl border text-[12px] font-medium transition-all',
+                  'flex flex-col items-center gap-[4px] py-2.5 px-sm rounded-xl border text-[12px] font-medium transition-all',
                   selectedStatus === status.key
                     ? 'border-primary bg-primary/5 text-primary ring-1 ring-primary/20'
                     : 'border-border-card text-on-surface-variant hover:bg-surface-container'
@@ -116,18 +116,18 @@ export function ProgressEntryForm({
 
       <div className="grid grid-cols-2 gap-lg">
         <div>
-          <label className="block text-[13px] font-medium text-on-surface mb-[6px]">Ayat Start</label>
+          <label className="block text-[13px] font-medium text-on-surface mb-1.5">Ayat Start</label>
           <input
             type="number"
             min={1}
             max={selectedSurah?.jumlahAyat || 286}
             value={ayatStart}
             onChange={(e) => setAyatStart(parseInt(e.target.value) || 1)}
-            className="w-full px-md py-[10px] rounded-xl border border-border-card bg-surface-container-lowest text-[14px] text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="w-full px-md py-2.5 rounded-xl border border-border-card bg-surface-container-lowest text-[14px] text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
         <div>
-          <label className="block text-[13px] font-medium text-on-surface mb-[6px]">
+          <label className="block text-[13px] font-medium text-on-surface mb-1.5">
             Ayat End {selectedSurah && <span className="text-primary font-normal">(Max: {selectedSurah.jumlahAyat})</span>}
           </label>
           <input
@@ -144,7 +144,7 @@ export function ProgressEntryForm({
               }
             }}
             className={cn(
-              "w-full px-md py-[10px] rounded-xl border border-border-card bg-surface-container-lowest text-[14px] text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20",
+              "w-full px-md py-2.5 rounded-xl border border-border-card bg-surface-container-lowest text-[14px] text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20",
               selectedSurah && ayatEnd > selectedSurah.jumlahAyat && "border-error focus:ring-error"
             )}
           />
@@ -152,20 +152,20 @@ export function ProgressEntryForm({
       </div>
 
       <div>
-        <label className="block text-[13px] font-medium text-on-surface mb-[6px]">Teacher Notes (Optional)</label>
+        <label className="block text-[13px] font-medium text-on-surface mb-1.5">Mentor Notes (Optional)</label>
         <textarea
           rows={3}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Excellent pronunciation, watch for Tajweed in verse 4..."
-          className="w-full px-md py-[10px] rounded-xl border border-border-card bg-surface-container-lowest text-[14px] text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none"
+          className="w-full px-md py-2.5 rounded-xl border border-border-card bg-surface-container-lowest text-[14px] text-on-surface placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none"
         />
       </div>
 
       <div className="flex justify-end">
         <button
           onClick={handleAdd}
-          className="flex items-center gap-sm px-xl py-[10px] rounded-xl bg-primary text-on-primary text-[14px] font-semibold hover:bg-primary-container transition-colors shadow-md"
+          className="flex items-center gap-sm px-xl py-2.5 rounded-xl bg-primary text-on-primary text-[14px] font-semibold hover:bg-primary-container transition-colors shadow-md"
         >
           <LuPlus className="w-4 h-4" />
           Add to Session Queue

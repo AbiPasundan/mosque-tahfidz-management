@@ -5,10 +5,10 @@ function ProgressBottomCards() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
             <div className="bg-surface-container-lowest rounded-xl border border-border-card p-lg">
                 <h3 className="text-[15px] font-semibold text-on-surface font-[Manrope] flex items-center gap-sm">
-                    <LuLightbulb className="w-4 h-4 text-amber-500" /> Teacher Tip
+                    <LuLightbulb className="w-4 h-4 text-amber-500" /> Mentor Tip
                 </h3>
                 <p className="text-[13px] text-muted mt-sm">
-                    Recording daily notes helps other teachers track specific student weaknesses in Tajweed or pronunciation during rotation.
+                    Recording daily notes helps other mentors track specific student weaknesses in Tajweed or pronunciation during rotation.
                 </p>
             </div>
 
