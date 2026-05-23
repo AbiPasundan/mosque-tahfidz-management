@@ -39,8 +39,10 @@ export function AppSidebar() {
   };
 
   const { data: data, isLoading, isError } = useMe();
-  console.log(data.data.role);
+  // console.log(data.data.role);
+  console.log(data);
   const userRole = data?.data?.role;
+  console.log(userRole);
 
   return (
     <>
@@ -66,7 +68,9 @@ export function AppSidebar() {
             <h1 className="text-[15px] font-bold text-on-surface leading-tight tracking-tight font-[Manrope]">
               Management<br />Siswa
             </h1>
-            <p className="text-[11px] text-muted leading-none mt-0.5">Mentor Portal</p>
+            <p className="text-[11px] text-muted leading-none mt-0.5">
+              {userRole === 'admin' ? 'Admin Portal' : 'Mentor Portal'}
+            </p>
           </div>
         </div>
 
