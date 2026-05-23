@@ -8,7 +8,7 @@ export const useMentors = () => {
     queryFn: async () => {
       const { data } = await api.get("/api/v1/users");
       // Backend returns all users, we filter to get mentors
-      const mentors = data?.data?.filter((user: Mentor) => user.role === 'mentor') || [];
+      const mentors = data?.data?.filter((user: Mentor) => user.role) || [];
       return mentors as Mentor[];
     },
     retry: false,
