@@ -9,7 +9,7 @@ export type HistoryItem = {
     status: string;
     statusColor: string;
     date: string;
-    teacher: string;
+    mentor: string;
     progress: number;
 };
 
@@ -65,11 +65,11 @@ export const historyColumns: ColumnDef<HistoryItem>[] = [
         ),
     },
     {
-        accessorKey: 'teacher',
-        header: 'Teacher',
+        accessorKey: 'mentor',
+        header: 'Mentor',
         cell: ({ row }) => (
             <span className="text-[13px] text-on-surface-variant">
-                {row.getValue('teacher')}
+                {row.getValue('mentor')}
             </span>
         ),
     },
