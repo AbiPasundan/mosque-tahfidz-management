@@ -220,7 +220,7 @@ export default function LoginPage() {
 
         {/* Bottom quote */}
         <p className="absolute bottom-8 left-0 right-0 text-center text-sm text-primary-content/70 px-8">
-          "Connecting teachers and students in a seamless digital ecosystem."
+          "Connecting mentors and students in a seamless digital ecosystem."
         </p>
       </div>
     </div>

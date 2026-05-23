@@ -27,7 +27,7 @@ const recentHistory = [
     status: 'EXCELLENT',
     statusColor: 'bg-emerald-50 text-emerald-700',
     date: 'Today, 08:30 AM',
-    teacher: 'Ustadz Idris',
+    mentor: 'Ustadz Idris',
     progress: 90,
   },
   {
@@ -38,7 +38,7 @@ const recentHistory = [
     status: 'NEED REVIEW',
     statusColor: 'bg-amber-50 text-amber-700',
     date: 'Today, 09:15 AM',
-    teacher: 'Ustadzah Sarah',
+    mentor: 'Ustadzah Sarah',
     progress: 55,
   },
   {
@@ -49,7 +49,7 @@ const recentHistory = [
     status: 'PASSED',
     statusColor: 'bg-emerald-50 text-emerald-700',
     date: 'Yesterday, 04:45 PM',
-    teacher: 'Ustadz Idris',
+    mentor: 'Ustadz Idris',
     progress: 85,
   },
   {
@@ -60,7 +60,7 @@ const recentHistory = [
     status: 'CONTINUE',
     statusColor: 'bg-blue-50 text-blue-700',
     date: 'Yesterday, 02:20 PM',
-    teacher: 'Ustadzah Mariam',
+    mentor: 'Ustadzah Mariam',
     progress: 40,
   },
 ];
