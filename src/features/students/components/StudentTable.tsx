@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "react-router";
 import {
     useReactTable,
     getCoreRowModel,
     getSortedRowModel,
     flexRender,
     type SortingState,
-    type PaginationState,
 } from "@tanstack/react-table";
 import { cn } from "@/utils/cn";
 import { useStudents } from "../hooks/useStudents";
@@ -19,29 +19,42 @@ import { StudentTableEmptyState } from "./StudentTableEmptyState";
 import { SortIcon } from "./SortIcon";
 
 function StudentTable() {
-    const [globalFilter, setGlobalFilter] = useState("");
-    const [debouncedFilter, setDebouncedFilter] = useState("");
-    const [statusFilterValue, setStatusFilterValue] = useState("all");
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [pagination, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: DEFAULT_PAGE_SIZE,
-    });
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    // Debounce search filter
+    // Derived state from URL Search Params
+    const q = searchParams.get("q") || "";
+    const status = searchParams.get("status") || "all";
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || DEFAULT_PAGE_SIZE.toString(), 10);
+
+    // Local state for the search input to allow smooth typing before debouncing to URL
+    const [searchInput, setSearchInput] = useState(q);
+    const [sorting, setSorting] = useState<SortingState>([]);
+
+    // Sync local input with URL if URL changes (e.g. back button or clear filters)
+    useEffect(() => {
+        setSearchInput(q);
+    }, [q]);
+
+    // Debounce search input to URL Search Params
     useEffect(() => {
         const handler = setTimeout(() => {
-            setDebouncedFilter(globalFilter);
-            setPagination(prev => ({ ...prev, pageIndex: 0 }));
+            if (searchInput !== q) {
+                const newParams = new URLSearchParams(searchParams);
+                if (searchInput) newParams.set("q", searchInput);
+                else newParams.delete("q");
+                newParams.set("page", "1"); // Reset to page 1 on new search
+                setSearchParams(newParams, { replace: true });
+            }
         }, 300);
         return () => clearTimeout(handler);
-    }, [globalFilter]);
+    }, [searchInput, q, searchParams, setSearchParams]);
 
     const { data, isLoading, isFetching } = useStudents({
-        page: pagination.pageIndex + 1,
-        limit: pagination.pageSize,
-        search: debouncedFilter || undefined,
-        status: statusFilterValue !== "all" ? statusFilterValue.toLowerCase() : undefined,
+        page,
+        limit,
+        search: q || undefined,
+        status: status !== "all" ? status.toLowerCase() : undefined,
     });
 
     const students: Student[] = useMemo(() => data?.data || [], [data]);
@@ -53,10 +66,21 @@ function StudentTable() {
         columns: studentColumns,
         state: {
             sorting,
-            pagination
+            pagination: {
+                pageIndex: page - 1,
+                pageSize: limit,
+            }
         },
         onSortingChange: setSorting,
-        onPaginationChange: setPagination,
+        onPaginationChange: (updater) => {
+            const currentPagination = { pageIndex: page - 1, pageSize: limit };
+            const nextPagination = typeof updater === 'function' ? updater(currentPagination) : updater;
+
+            const newParams = new URLSearchParams(searchParams);
+            newParams.set("page", String(nextPagination.pageIndex + 1));
+            newParams.set("limit", String(nextPagination.pageSize));
+            setSearchParams(newParams, { replace: true });
+        },
         pageCount: totalPages,
         manualPagination: true,
         getCoreRowModel: getCoreRowModel(),
@@ -64,30 +88,31 @@ function StudentTable() {
     });
 
     const handleStatusFilter = (value: string) => {
-        setStatusFilterValue(value);
-        setPagination(prev => ({ ...prev, pageIndex: 0 }));
+        const newParams = new URLSearchParams(searchParams);
+        if (value === "all") newParams.delete("status");
+        else newParams.set("status", value);
+        newParams.set("page", "1"); // Reset to page 1 on filter change
+        setSearchParams(newParams, { replace: true });
     };
 
     const handleGlobalFilterChange = (value: string) => {
-        setGlobalFilter(value);
+        setSearchInput(value);
     };
 
-    const hasActiveFilters = globalFilter !== "" || statusFilterValue !== "all";
+    const hasActiveFilters = q !== "" || status !== "all";
 
     const clearAllFilters = () => {
-        setGlobalFilter("");
-        setDebouncedFilter("");
-        setStatusFilterValue("all");
-        setPagination(prev => ({ ...prev, pageIndex: 0 }));
+        setSearchInput("");
+        setSearchParams({}, { replace: true });
     };
 
     return (
         <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
             {/* ── Toolbar ─────────────────────────────────────────────── */}
             <StudentTableToolbar
-                globalFilter={globalFilter}
+                globalFilter={searchInput}
                 onGlobalFilterChange={handleGlobalFilterChange}
-                statusFilter={statusFilterValue}
+                statusFilter={status}
                 onStatusFilterChange={handleStatusFilter}
                 hasActiveFilters={hasActiveFilters}
                 onClearAllFilters={clearAllFilters}
