@@ -66,7 +66,7 @@ export function AppSidebar() {
             <h1 className="text-[15px] font-bold text-on-surface leading-tight tracking-tight font-[Manrope]">
               Management<br />Siswa
             </h1>
-            <p className="text-[11px] text-muted leading-none mt-0.5">Teacher Portal</p>
+            <p className="text-[11px] text-muted leading-none mt-0.5">Mentor Portal</p>
           </div>
         </div>
 
