@@ -1,9 +1,19 @@
 import { useSidebarStore } from '@/stores/sidebarStore';
 import { LuMenu, LuBell, LuCircleHelp } from 'react-icons/lu';
 import { SearchBar } from '@/components/ui/SearchBar';
+import { useMe } from '@/features/auth/hooks/useMe';
 
 export function AppHeader() {
   const { toggle } = useSidebarStore();
+  const { data: meData } = useMe();
+  const user = meData?.data;
+
+  const getInitials = (name: string) => {
+    if (!name) return "";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + (parts[1]?.[0] || "")).toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-20 bg-surface-container-lowest/80 backdrop-blur-md border-b border-border-light">
@@ -37,11 +47,15 @@ export function AppHeader() {
           {/* User profile */}
           <div className="flex items-center gap-sm ml-xs">
             <div className="hidden sm:block text-right">
-              <p className="text-[13px] font-medium text-on-surface leading-tight">Ustadz Ahmad</p>
-              <p className="text-[11px] text-muted leading-tight">Administrator</p>
+              <p className="text-[13px] font-medium text-on-surface leading-tight">
+                {user?.name || "Loading..."}
+              </p>
+              <p className="text-[11px] text-muted leading-tight capitalize">
+                {user?.role === "admin" ? "Administrator" : user?.role || ""}
+              </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary-container flex items-center justify-center text-on-primary text-[13px] font-semibold ring-2 ring-border-light">
-              UA
+              {user ? getInitials(user.name) : ""}
             </div>
           </div>
         </div>
