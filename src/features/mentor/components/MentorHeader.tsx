@@ -1,4 +1,5 @@
 import { LuPlus } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 export function MentorHeader() {
     return (
@@ -9,10 +10,13 @@ export function MentorHeader() {
                     Manage tahfidz mentors, update their details, and review their assigned students.
                 </p>
             </div>
-            <button className="flex items-center gap-sm px-lg py-2.25 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors shrink-0" >
+            <Link
+                to="/mentor/add"
+                className="flex items-center gap-sm px-lg py-2.25 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors shrink-0"
+            >
                 <LuPlus className="w-4 h-4" />
                 Add Mentor
-            </button>
+            </Link>
         </div>
     );
 }
