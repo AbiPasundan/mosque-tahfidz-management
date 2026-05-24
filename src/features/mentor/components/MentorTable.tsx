@@ -4,6 +4,7 @@ import { DataTable } from "@/components/ui/Table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Mentor } from "../types/mentor";
 import { LuPencil, LuTrash2 } from "react-icons/lu";
+import { Link } from "react-router";
 
 const mentorColumns: ColumnDef<Mentor>[] = [
   {
@@ -16,9 +17,12 @@ const mentorColumns: ColumnDef<Mentor>[] = [
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[12px] font-bold shrink-0">
             {initials}
           </div>
-          <span className="text-[13px] font-semibold text-on-surface">
+          <Link
+            to={`/mentor/${row.original.id}`}
+            className="text-[13px] font-semibold text-on-surface hover:text-primary hover:underline transition-colors"
+          >
             {row.original.name}
-          </span>
+          </Link>
         </div>
       );
     },
