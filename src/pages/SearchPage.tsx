@@ -5,6 +5,7 @@ import { useStudents } from '@/features/students/hooks/useStudents';
 import { useUsers } from '@/features/auth/hooks/useUsers';
 import { useProgress } from '@/features/progressTracking/hooks/useProgress';
 import { useMe } from '@/features/auth/hooks/useMe';
+import { useActivityLogs } from '@/features/activityLog/hooks/useActivityLogs';
 import type { Student } from '@/features/students/types/student';
 
 // Sub-components
@@ -67,9 +68,15 @@ export default function SearchPage() {
     limit: 5
   });
 
+  const { data: activityResponse, isLoading: loadingActivities } = useActivityLogs({
+    limit: 5
+  }, {
+    enabled: isAdmin
+  }) as any;
+
   const students = studentResponse?.data || [];
   const users = isAdmin ? (userResponse?.data || []) : [];
-  const activities = progressResponse?.data || [];
+  const activities = isAdmin ? (activityResponse?.data || []) : (progressResponse?.data || []);
 
   const handleSearch = (value: string) => {
     setQuery(value);
@@ -168,7 +175,7 @@ export default function SearchPage() {
                 Recent Activity
                 <span className="text-[12px] font-normal text-muted">{activities.length} entries</span>
               </h2>
-              <ActivityList activities={activities} />
+              <ActivityList activities={activities} isActivityLog={isAdmin} />
             </div>
           </div>
         )}
