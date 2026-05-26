@@ -10,7 +10,7 @@ function StudentHeader() {
                     Manage enrollments, monitor progress, and update learning levels for  {/* {students.length.toLocaleString()} */} students.
                 </p>
             </div>
-            <Link to="/students/new" className="flex items-center gap-sm px-lg py-2.25 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors shrink-0" >
+            <Link to="/students/add" className="flex items-center gap-sm px-lg py-2.25 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors shrink-0" >
                 <LuPlus className="w-4 h-4" />
                 Add Student
             </Link>
