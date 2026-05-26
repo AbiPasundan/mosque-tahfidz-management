@@ -3,6 +3,7 @@ export interface Student {
     mentor_id: string;
     mentor_name?: string;
     name: string;
+    username: string;
     password: string;
     profile_img: string;
     cover_img: string;
