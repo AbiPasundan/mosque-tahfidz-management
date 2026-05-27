@@ -1,11 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { LuEllipsisVertical } from "react-icons/lu";
 import { Link } from "react-router";
-import { cn } from "@/utils/cn";
 import { StudentStatusBadge } from "@/features/students/components/StudentStatusBadge";
+import { StudentAvatar } from "@/features/students/components/StudentAvatar";
 import type { Student } from "../types/student";
 import { AVATAR_COLORS } from "../constants/studentTable";
-import { getInitials } from "../utils/studentTableHelpers";
 
 const columnHelper = createColumnHelper<Student>();
 
@@ -19,14 +18,12 @@ export const studentColumns = [
 
             return (
                 <div className="flex items-center gap-sm">
-                    <div
-                        className={cn(
-                            "w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0",
-                            colorClass
-                        )}
-                    >
-                        {getInitials(student.name)}
-                    </div>
+                    <StudentAvatar
+                        name={student.name}
+                        profileImg={student.profile_img}
+                        size="sm"
+                        fallbackColorClass={colorClass}
+                    />
                     <div>
                         <Link
                             to={`/students/${student.id}`}
