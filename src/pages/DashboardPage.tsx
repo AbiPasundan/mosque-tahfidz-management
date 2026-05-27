@@ -10,146 +10,107 @@ import {
   LuCalendar,
   LuPencil,
 } from 'react-icons/lu';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import DashboardHeader from '@/features/dashboard/components/DashboardHeader';
-import LineBarAreaComposedChart from '@/features/dashboard/components/DashboardChart';
+import DashboardChart from '@/features/dashboard/components/DashboardChart';
 import { historyColumns } from '@/features/dashboard/components/DashboardTable';
 import { DataTable } from '@/components/ui/Table';
 import { useDashboardCard } from '@/features/dashboard/hooks/useDashboardCard';
-
-
-const recentHistory = [
-  {
-    initials: 'YA',
-    initialsColor: 'bg-emerald-100 text-emerald-700',
-    name: 'Yusuf Al-Habsyi',
-    lesson: 'Surah Al-Mulk (Ayat 1-30)',
-    status: 'EXCELLENT',
-    statusColor: 'bg-emerald-50 text-emerald-700',
-    date: 'Today, 08:30 AM',
-    mentor: 'Ustadz Idris',
-    progress: 90,
-  },
-  {
-    initials: 'FZ',
-    initialsColor: 'bg-rose-100 text-rose-700',
-    name: 'Fatima Zahra',
-    lesson: 'Surah An-Naba',
-    status: 'NEED REVIEW',
-    statusColor: 'bg-amber-50 text-amber-700',
-    date: 'Today, 09:15 AM',
-    mentor: 'Ustadzah Sarah',
-    progress: 55,
-  },
-  {
-    initials: 'AM',
-    initialsColor: 'bg-violet-100 text-violet-700',
-    name: 'Abdullah Mansur',
-    lesson: 'Juz Amma Revision',
-    status: 'PASSED',
-    statusColor: 'bg-emerald-50 text-emerald-700',
-    date: 'Yesterday, 04:45 PM',
-    mentor: 'Ustadz Idris',
-    progress: 85,
-  },
-  {
-    initials: 'SK',
-    initialsColor: 'bg-pink-100 text-pink-700',
-    name: 'Siti Khadijah',
-    lesson: 'Iqra Level 4',
-    status: 'CONTINUE',
-    statusColor: 'bg-blue-50 text-blue-700',
-    date: 'Yesterday, 02:20 PM',
-    mentor: 'Ustadzah Mariam',
-    progress: 40,
-  },
-];
+import { useActivityLogs } from '@/features/activityLog/hooks/useActivityLogs';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 
 export default function DashboardPage() {
   const { data, isLoading } = useDashboardCard();
-  console.log(data?.data);
+  const { data: logsResponse } = useActivityLogs({ page: 1, limit: 3 });
+  const navigate = useNavigate();
 
+  const dashboard = data?.data;
 
   const quickActionsData: QuickActionItem[] = [
     {
       icon: <LuUserPlus className="w-5 h-5" />,
       label: 'Register New Student',
-      onClick: () => console.log('Navigating to register...')
+      onClick: () => navigate('/students'),
     },
     {
       icon: <LuClipboardList className="w-5 h-5" />,
       label: 'Input Progress Today',
-      onClick: () => console.log('Open input modal...')
+      onClick: () => navigate('/progress'),
     },
     {
       icon: <LuCalendar className="w-5 h-5" />,
-      label: 'Schedule Evaluation',
-      onClick: () => console.log('Open calendar...')
+      label: 'View History',
+      onClick: () => navigate('/history'),
     },
   ];
 
-  const liveUpdatesData: LiveUpdateItem[] = [
-    {
-      icon: <LuClipboardList className="w-5 h-5" />,
-      iconBg: 'bg-primary/10 text-primary',
-      title: 'Yusuf A. completed Juz 29',
-      subtitle: '2 mins ago • Tahfidz Class',
-    },
-    {
-      icon: <LuCircleCheck className="w-5 h-5" />,
-      iconBg: 'bg-success/20 text-success',
-      title: '30 Attendance marked',
-      subtitle: '15 mins ago • Morning Session',
-    },
-    {
-      icon: <LuPencil className="w-5 h-5" />,
-      iconBg: 'bg-warning/20 text-warning',
-      title: 'Profile updated: Fatima Z.',
-      subtitle: '1 hour ago • Admin Action',
-    },
-  ];
+  // Build live updates from real activity logs
+  const liveUpdatesData: LiveUpdateItem[] = ((logsResponse as any)?.data || []).slice(0, 3).map((log: any) => {
+    const iconMap: Record<string, { icon: React.ReactNode; bg: string }> = {
+      CREATE_PROGRESS: { icon: <LuClipboardList className="w-5 h-5" />, bg: 'bg-primary/10 text-primary' },
+      UPDATE_STUDENT: { icon: <LuPencil className="w-5 h-5" />, bg: 'bg-warning/20 text-warning' },
+      CREATE_STUDENT: { icon: <LuUserPlus className="w-5 h-5" />, bg: 'bg-success/20 text-success' },
+      CREATE_USER: { icon: <LuUsers className="w-5 h-5" />, bg: 'bg-violet-100 text-violet-700' },
+    };
+    const { icon, bg } = iconMap[log.action] || { icon: <LuCircleCheck className="w-5 h-5" />, bg: 'bg-surface-container text-muted' };
+
+    return {
+      icon,
+      iconBg: bg,
+      title: log.description || log.action,
+      subtitle: `${new Date(log.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} • ${log.user_name}`,
+    };
+  });
+
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        Loading...
+      <div className="space-y-lg">
+        <DashboardHeader />
+        <LoadingSkeleton />
       </div>
     );
   }
+
   return (
     <div className="space-y-lg">
       <DashboardHeader />
 
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
-        <DashboardCard label="TOTAL STUDENTS" value={data?.data?.total_students} subtitle="" icon={<LuUsers className="w-5 h-5 text-primary" />} />
-
-        <DashboardCard label="ACTIVE TODAY" value={data?.data?.active_today} icon={<LuCircleCheck className="w-5 h-5 text-primary" />} />
-
+        <DashboardCard
+          label="TOTAL STUDENTS"
+          value={dashboard?.total_students ?? 0}
+          subtitle=""
+          icon={<LuUsers className="w-5 h-5 text-primary" />}
+        />
+        <DashboardCard
+          label="ACTIVITY TODAY"
+          value={dashboard?.active_today ?? 0}
+          icon={<LuCircleCheck className="w-5 h-5 text-primary" />}
+        />
         <DashboardCard
           label="WEEKLY PROGRESS"
-          value={data?.data?.weekly_progress_percentage !== undefined ? `${Number(data.data.weekly_progress_percentage).toFixed(1)}%` : '0%'}
+          value={dashboard?.weekly_progress_percentage !== undefined
+            ? `${Number(dashboard.weekly_progress_percentage).toFixed(1)}%`
+            : '0%'
+          }
           subtitle=""
           icon={<LuStar className="w-5 h-5 text-primary" />}
-        >
-          {/* <TrendIndicator change="On target for Quran khatam" trend="up" label="" /> */}
-        </DashboardCard>
+        />
       </div>
 
+      {/* Chart + Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
         <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl border border-border-card p-lg">
           <div className="flex items-center justify-between mb-lg">
             <h3 className="text-[18px] font-semibold text-on-surface font-[Manrope]">
               Weekly Student Activity
             </h3>
-            <div className="flex rounded-lg border border-border-card overflow-hidden">
-              <button className="px-md py-xs text-[12px] font-medium bg-surface-container text-on-surface">
-                Weekly
-              </button>
-              <button className="px-md py-xs text-[12px] font-medium text-muted hover:bg-surface-container-low transition-colors">
-                Monthly
-              </button>
-            </div>
+            <span className="px-md py-xs text-[12px] font-medium bg-surface-container text-on-surface rounded-lg">
+              Last 7 Days
+            </span>
           </div>
-          <LineBarAreaComposedChart />
+          <DashboardChart data={dashboard?.weekly_activity || []} />
         </div>
 
         <div className="space-y-lg">
@@ -158,33 +119,21 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Recent Progress Table */}
       <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
         <div className="flex items-center justify-between px-lg py-md border-b border-border-card">
           <h3 className="text-[18px] font-semibold text-on-surface font-[Manrope]">
             Recent Learning History
           </h3>
-          <Link to="/history" className="text-[13px] font-medium text-primary hover:underline" >
+          <Link to="/history" className="text-[13px] font-medium text-primary hover:underline">
             View All History
           </Link>
         </div>
 
         <div className="overflow-x-auto">
-          <DataTable columns={historyColumns} data={recentHistory} />
-        </div>
-
-        <div className="text-center py-md border-t border-border-card">
-          <button className="text-[13px] text-muted hover:text-on-surface transition-colors">
-            Show more records
-          </button>
+          <DataTable columns={historyColumns} data={dashboard?.recent_progress || []} />
         </div>
       </div>
-
-      {/* <div className="fixed bottom-24 md:bottom-8 right-6 z-30">
-        <button className="w-14 h-14 rounded-full bg-primary text-on-primary shadow-lg hover:shadow-xl hover:bg-primary-container transition-all flex items-center justify-center">
-          <LuPlus className="w-6 h-6" />
-        </button>
-      </div> */}
     </div>
   );
 }
-
