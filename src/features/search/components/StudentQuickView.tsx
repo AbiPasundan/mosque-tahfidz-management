@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { LuX } from 'react-icons/lu';
-import { getInitials } from '@/features/students/utils/studentTableHelpers';
+import { StudentAvatar } from '@/features/students/components/StudentAvatar';
 import type { StudentQuickViewProps } from '../type/search';
 
 export function StudentQuickView({ student, onClose }: StudentQuickViewProps) {
@@ -15,9 +15,12 @@ export function StudentQuickView({ student, onClose }: StudentQuickViewProps) {
 
       {/* Profile */}
       <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-[20px] font-bold mx-auto">
-          {getInitials(student.name)}
-        </div>
+        <StudentAvatar
+          name={student.name}
+          profileImg={student.profile_img}
+          size="lg"
+          className="mx-auto"
+        />
         <h4 className="text-[16px] font-bold text-on-surface mt-sm font-[Manrope]">{student.name}</h4>
         <p className="text-[12px] text-muted">Level: {student.learning_level}</p>
         <p className="text-[11px] text-emerald-600 font-semibold mt-[2px] uppercase">● {student.status}</p>
