@@ -1,20 +1,38 @@
 import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
+import { StudentAvatar } from '@/features/students/components/StudentAvatar';
 import type { Student } from '@/features/students/types/student';
 import { formatDistanceToNow } from 'date-fns';
+import { useState } from 'react';
 
 function StudentDetailMainLeft({ student }: { student: Student }) {
-    const initials = student.name.split(' ').slice(0, 2).map((n: string) => n[0]).join('').toUpperCase();
+    const [coverError, setCoverError] = useState(false);
+    const hasCover = student.cover_img && !coverError;
 
     return (
         <div className="space-y-lg">
             {/* Profile Card */}
             <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
-                {/* Purple header */}
-                <div className="h-28 bg-linear-to-br from-primary to-primary-container relative">
-                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
-                        <div className="w-20 h-20 rounded-full bg-primary-container border-4 border-surface-container-lowest flex items-center justify-center text-on-primary text-[24px] font-bold">
-                            {initials}
-                        </div>
+                {/* Cover / gradient header */}
+                <div className="relative">
+                    <div className="h-28 overflow-hidden">
+                        {hasCover ? (
+                            <img
+                                src={student.cover_img}
+                                alt="Cover"
+                                className="w-full h-full object-cover"
+                                onError={() => setCoverError(true)}
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-linear-to-br from-primary to-primary-container" />
+                        )}
+                    </div>
+                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 z-10">
+                        <StudentAvatar
+                            name={student.name}
+                            profileImg={student.profile_img}
+                            size="xl"
+                            className="border-4 border-surface-container-lowest"
+                        />
                     </div>
                 </div>
 
