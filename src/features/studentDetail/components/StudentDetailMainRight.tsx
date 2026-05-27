@@ -4,8 +4,10 @@ import { useProgress } from '@/features/progressTracking/hooks/useProgress';
 import type { Student } from '@/features/students/types/student';
 import StudentDetailOverview from './StudentDetailOverview';
 import StudentDetailProgress from './StudentDetailProgress';
+import StudentDetailHafalan from './StudentDetailHafalan';
+import StudentDetailData from './StudentDetailData';
 
-const tabs = ['Overview', 'Progress', 'Hafalan',];
+const tabs = ['Overview', 'Progress', 'Hafalan', 'Data',];
 
 function StudentDetailMainRight({ student }: { student: Student }) {
     const [activeTab, setActiveTab] = useState('Overview');
@@ -45,9 +47,15 @@ function StudentDetailMainRight({ student }: { student: Student }) {
             {activeTab === 'Progress' && (
                 <StudentDetailProgress student={student} />
             )}
+            {activeTab === 'Hafalan' && (
+                <StudentDetailHafalan student={student} progress={progress} />
+            )}
+            {activeTab === 'Data' && (
+                <StudentDetailData student={student} />
+            )}
 
             {/* Placeholder for other tabs */}
-            {activeTab !== 'Overview' && activeTab !== 'Progress' && (
+            {activeTab !== 'Overview' && activeTab !== 'Progress' && activeTab !== 'Hafalan' && activeTab !== 'Data' && (
                 <div className="bg-surface-container-lowest rounded-xl border border-border-card p-xl text-center">
                     <p className="text-[14px] text-muted">{activeTab} content will appear here.</p>
                 </div>
