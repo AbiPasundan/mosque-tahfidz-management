@@ -1,103 +1,91 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
 } from 'recharts';
 
-const rawData = [
-    {
-        day: "Monday",
-        data: [{ name: "test" }, { name: "test" }, { name: "test" }],
-    },
-    {
-        day: "Sunday",
-        data: [{ name: "test" }],
-    },
-    {
-        day: "Sunday",
-        data: [{ name: "test" }],
-    },
-    {
-        day: "Sunday",
-        data: [{ name: "test" }],
-    },
-    {
-        day: "Sunday",
-        data: [{ name: "test" }],
-    },
-    {
-        day: "Sunday",
-        data: [{ name: "test" }],
-    },
-    {
-        day: "Sunday",
-        data: [{ name: "test" }],
-    },
-];
+interface WeeklyActivity {
+  day: string;
+  date: string;
+  count: number;
+}
 
-export default function SimpleBarChart() {
-    const chartData = useMemo(() => {
-        return rawData.map((item) => ({
-            day: item.day,             
-            total: item.data.length,   
-        }));
-    }, []);
+interface DashboardChartProps {
+  data: WeeklyActivity[];
+}
 
+export default function DashboardChart({ data }: DashboardChartProps) {
+  const chartData = useMemo(() => {
+    if (!data || data.length === 0) {
+      return [];
+    }
+    return data.map((item) => ({
+      day: item.day,
+      count: item.count,
+    }));
+  }, [data]);
+
+  if (chartData.length === 0) {
     return (
-        <div className="w-full h-125 bg-[#1a1a1c] p-6 rounded-lg font-sans">
-            <h2 className="text-white text-2xl font-semibold mb-6">
-                Data Count Per Day
-            </h2>
-
-            <div className="w-full h-100">
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        data={chartData}
-                        margin={{ top: 20, right: 20, bottom: 20, left: 20 }} >
-                        {/* Grid background */}
-                        <CartesianGrid stroke="#333333" strokeDasharray="3 3" vertical={false} />
-
-                        {/* Sumbu X (Hari) */}
-                        <XAxis
-                            dataKey="day"
-                            stroke="#9ca3af"
-                            tick={{ fill: '#9ca3af' }}
-                            axisLine={false}
-                            tickLine={false}
-                            dy={10}
-                        />
-
-                        {/* Sumbu Y (Jumlah) */}
-                        <YAxis
-                            stroke="#9ca3af"
-                            tick={{ fill: '#9ca3af' }}
-                            axisLine={false}
-                            tickLine={false}
-                            allowDecimals={false} // Agar sumbu Y tidak menampilkan angka desimal seperti 1.5
-                        />
-
-                        {/* Tooltip */}
-                        <Tooltip
-                            cursor={{ fill: '#2d3748', opacity: 0.4 }}
-                            contentStyle={{ backgroundColor: '#2d3748', border: 'none', borderRadius: '8px', color: '#fff' }}
-                        />
-
-                        {/* Bar Chart */}
-                        <Bar
-                            dataKey="total"
-                            name="Jumlah Data" // Nama yang muncul di tooltip
-                            fill="#4f46e5" // Warna biru keunguan (Indigo Tailwind)
-                            radius={[4, 4, 0, 0]} // Sudut atas melengkung
-                            barSize={40}
-                        />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-        </div>
+      <div className="h-64 flex items-center justify-center text-muted text-[14px]">
+        No activity data available
+      </div>
     );
+  }
+
+  return (
+    <div className="w-full h-72">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={chartData}
+          margin={{ top: 10, right: 10, bottom: 10, left: -10 }}
+        >
+          <CartesianGrid
+            stroke="var(--color-border-card)"
+            strokeDasharray="3 3"
+            vertical={false}
+          />
+          <XAxis
+            dataKey="day"
+            stroke="var(--color-muted)"
+            tick={{ fill: 'var(--color-muted)', fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+            dy={8}
+          />
+          <YAxis
+            stroke="var(--color-muted)"
+            tick={{ fill: 'var(--color-muted)', fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+            allowDecimals={false}
+          />
+          <Tooltip
+            cursor={{ fill: 'var(--color-surface-container)', opacity: 0.5 }}
+            contentStyle={{
+              backgroundColor: 'var(--color-surface-container-lowest)',
+              border: '1px solid var(--color-border-card)',
+              borderRadius: '12px',
+              fontSize: '13px',
+              color: 'var(--color-on-surface)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+            }}
+            labelStyle={{ fontWeight: 700, marginBottom: 4 }}
+          />
+          <Bar
+            dataKey="count"
+            name="Progress Entries"
+            fill="var(--color-primary)"
+            radius={[6, 6, 0, 0]}
+            barSize={36}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
 }
