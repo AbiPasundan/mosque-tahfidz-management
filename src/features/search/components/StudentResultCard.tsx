@@ -1,9 +1,7 @@
 import { Link } from 'react-router';
 import { LuArrowRight } from 'react-icons/lu';
-import { cn } from '@/utils/cn';
 import { StudentStatusBadge } from '@/features/students/components/StudentStatusBadge';
-import { getInitials } from '@/features/students/utils/studentTableHelpers';
-import type { Student } from '@/features/students/types/student';
+import { StudentAvatar } from '@/features/students/components/StudentAvatar';
 import type { StudentResultCardProps } from '../type/search';
 
 const avatarColors = [
@@ -21,12 +19,12 @@ export function StudentResultCard({ student, index, onClick }: StudentResultCard
       className="bg-surface-container-lowest rounded-xl border border-border-card p-lg text-left hover:shadow-card transition-all"
     >
       <div className="flex items-center gap-sm mb-md">
-        <div className={cn(
-          'w-10 h-10 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0',
-          avatarColors[index % avatarColors.length]
-        )}>
-          {getInitials(student.name)}
-        </div>
+        <StudentAvatar
+          name={student.name}
+          profileImg={student.profile_img}
+          size="md"
+          fallbackColorClass={avatarColors[index % avatarColors.length]}
+        />
         <div className="flex-1 min-w-0">
           <p className="text-[14px] font-semibold text-on-surface truncate">{student.name}</p>
           <p className="text-[11px] text-muted truncate">Level: {student.learning_level}</p>
