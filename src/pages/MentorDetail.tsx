@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router';
 import { useMentorDetail } from '@/features/mentorDetail/hooks/useMentorDetail';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { StudentAvatar } from '@/features/students/components/StudentAvatar';
 import {
   LuChevronRight,
   LuMail,
@@ -206,9 +207,13 @@ export default function MentorDetailPage() {
                     >
                       <div className="flex items-start gap-md">
                         {/* Avatar */}
-                        <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[16px] group-hover:scale-105 transition-transform duration-200 shrink-0">
-                          {studentInitials}
-                        </div>
+                        <StudentAvatar
+                          name={student.name}
+                          profileImg={student.profile_img}
+                          size="md"
+                          fallbackColorClass="bg-primary/10 text-primary"
+                          className="group-hover:scale-105 transition-transform duration-200"
+                        />
 
                         {/* Name and Level */}
                         <div className="min-w-0">
