@@ -15,10 +15,10 @@ function StudentDetailOverview({ student }: { student: Student }) {
                     <h3 className="text-[17px] font-semibold text-on-surface font-[Manrope]">Hafalan Summary</h3>
                     <p className="text-[13px] text-muted mt-0.5">Current memorization tracking and milestones</p>
                 </div>
-                <button className="flex items-center gap-sm px-md py-1.75 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors">
+                {/* <button className="flex items-center gap-sm px-md py-1.75 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors">
                     <LuPlus className="w-4 h-4" />
                     Add Entry
-                </button>
+                </button> */}
             </div>
 
             {/* Juz Progress + Current Surah cards */}
