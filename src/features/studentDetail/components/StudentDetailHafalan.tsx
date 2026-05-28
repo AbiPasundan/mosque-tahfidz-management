@@ -183,7 +183,6 @@ function StudentDetailHafalan({
                   key={surah.surahName}
                   className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden shadow-xs hover:shadow-sm transition-all duration-150"
                 >
-                  {/* Card Header (Clickable for expansion) */}
                   <div
                     onClick={() => toggleExpand(surah.surahName)}
                     className="p-lg flex items-center justify-between cursor-pointer select-none hover:bg-surface-container-low/20 transition-colors"
@@ -204,7 +203,6 @@ function StudentDetailHafalan({
                     </div>
 
                     <div className="flex items-center gap-md">
-                      {/* Overall Status Badge */}
                       <span
                         className={cn(
                           "px-2.5 py-0.5 rounded-full text-[10px] font-bold border shrink-0",
@@ -222,8 +220,6 @@ function StudentDetailHafalan({
                       )}
                     </div>
                   </div>
-
-                  {/* Card Details (Expandable) */}
                   {isExpanded && (
                     <div className="px-lg pb-lg border-t border-border-card bg-surface-container-low/10 divide-y divide-border-card/50">
                       {surah.segments.map((seg, idx) => {
@@ -248,8 +244,8 @@ function StudentDetailHafalan({
                                     seg.status.toUpperCase() === "LANCAR"
                                       ? "bg-emerald-50/50 text-emerald-700 border-emerald-100"
                                       : seg.status.toUpperCase() === "MENGULANG"
-                                      ? "bg-amber-50/50 text-amber-700 border-amber-100"
-                                      : "bg-blue-50/50 text-blue-700 border-blue-100"
+                                        ? "bg-amber-50/50 text-amber-700 border-amber-100"
+                                        : "bg-blue-50/50 text-blue-700 border-blue-100"
                                   )}
                                 >
                                   {seg.status}
@@ -288,6 +284,7 @@ function StudentDetailHafalan({
             </p>
           </div>
         )}
+
       </div>
     </div>
   );
