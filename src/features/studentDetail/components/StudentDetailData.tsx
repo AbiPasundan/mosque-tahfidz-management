@@ -269,7 +269,7 @@ export default function StudentDetailData({ student }: StudentDetailDataProps) {
   // Permission denied
   if (!canEdit) {
     return (
-      <div className="p-xl bg-surface-container-lowest rounded-2xl border border-border-card text-center max-w-lg mx-auto my-lg shadow-sm">
+      <div className="p-xl bg-surface-container-lowest rounded-2xl border border-border-card text-center mx-auto my-lg shadow-sm">
         <div className="w-12 h-12 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto mb-md">
           <LuShieldAlert className="w-6 h-6 text-rose-500" />
         </div>
