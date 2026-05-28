@@ -227,7 +227,7 @@ export default function MentorDetailPage() {
                 </div>
                 <div>
                   <h4 className="text-[16px] font-bold text-on-surface">No Students Assigned</h4>
-                  <p className="text-body-md text-muted max-w-xs mt-xs">
+                  <p className="text-body-md text-muted mt-xs">
                     This mentor does not have any active students assigned under their guidance yet.
                   </p>
                 </div>
@@ -266,9 +266,8 @@ export default function MentorDetailPage() {
                               <LuBookOpen className="w-3 h-3" /> {student.learning_level}
                             </span>
                             <span
-                              className={`inline-block w-2 h-2 rounded-full ${
-                                isStudentActive ? 'bg-success' : 'bg-muted'
-                              }`}
+                              className={`inline-block w-2 h-2 rounded-full ${isStudentActive ? 'bg-success' : 'bg-muted'
+                                }`}
                             />
                             <span className="text-[11px] text-muted capitalize">
                               {student.status?.toLowerCase()}

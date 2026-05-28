@@ -117,7 +117,7 @@ export default function HistoryPage() {
           <span className="text-on-surface font-medium">Activity Log</span>
         </div>
 
-        <div className="max-w-md mx-auto mt-12 p-xl bg-surface-container-lowest rounded-2xl border border-border-card text-center shadow-xs">
+        <div className="mx-auto mt-12 p-xl bg-surface-container-lowest rounded-2xl border border-border-card text-center shadow-xs">
           <div className="w-14 h-14 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center mx-auto mb-md">
             <LuShieldAlert className="w-7 h-7 text-amber-600" />
           </div>
