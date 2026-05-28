@@ -15,7 +15,7 @@ export default function ProgressPage() {
   const { data: userData } = useMe();
   const currentUserId = userData?.data?.user_id || userData?.data?.id;
 
-  const { data: studentsResponse, isLoading: loadingStudents } = useStudents();
+  const { data: studentsResponse, isLoading: loadingStudents } = useStudents({ limit: 100 });
   const { data: surahs, isLoading: loadingSurahs } = useSurahs();
   const bulkCreateMutation = useBulkCreateProgress();
 
