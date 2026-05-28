@@ -1,6 +1,8 @@
 import { NavLink, useLocation, useNavigate } from 'react-router';
 import { useSidebarStore } from '@/stores/sidebarStore';
 import { cn } from '@/utils/cn';
+import { useState } from 'react';
+import Modal from '@/components/shared/modal';
 import {
   LuLayoutDashboard,
   LuUsers,
@@ -27,11 +29,13 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const { isOpen, setOpen } = useSidebarStore();
   const location = useLocation();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const logoutMutation = useLogout();
+
   const handleLogout = async () => {
     try {
       await logoutMutation.mutateAsync();
-
+      setIsLogoutModalOpen(false);
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -126,12 +130,25 @@ export function AppSidebar() {
             <LuSettings className="w-4.5 h-4.5 shrink-0" />
             <span>Settings</span>
           </NavLink>
-          <button onClick={() => handleLogout()} className="flex items-center gap-md px-md py-2.5 rounded-lg text-[14px] text-error hover:bg-error-container/50 transition-colors w-full text-left" >
+          <button onClick={() => setIsLogoutModalOpen(true)} className="flex items-center gap-md px-md py-2.5 rounded-lg text-[14px] text-error hover:bg-error-container/50 transition-colors w-full text-left" >
             <LuLogOut className="w-4.5 h-4.5 shrink-0" />
             <span>Logout</span>
           </button>
         </div>
       </aside>
+
+      <Modal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        title="Konfirmasi Keluar"
+        variant="danger"
+        confirmLabel="Keluar"
+        onConfirm={handleLogout}
+        isLoading={logoutMutation.isPending}
+        size="2xl"
+      >
+        Apakah Anda yakin ingin keluar dari sistem Management Siswa Tahfidz? Sesi aktif Anda akan segera berakhir.
+      </Modal>
     </>
   );
 }
