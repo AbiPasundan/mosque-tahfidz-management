@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 import {
   LuUser,
   LuLock,
@@ -15,11 +16,14 @@ import {
   LuX,
   LuImage,
   LuLoader,
+  LuTrash,
 } from "react-icons/lu";
 import type { Student } from "@/features/students/types/student";
 import { useMe } from "@/features/auth/hooks/useMe";
 import { useUpdateStudent } from "@/features/students/hooks/useUpdateStudent";
+import { useDeleteStudent } from "@/features/students/hooks/useDeleteStudent";
 import { useUploadFile } from "@/features/upload/hooks/useUploadFile";
+import Modal from "@/components/shared/modal";
 import { cn } from "@/utils/cn";
 
 // Options
@@ -203,13 +207,16 @@ interface StudentDetailDataProps {
 export default function StudentDetailData({ student }: StudentDetailDataProps) {
   const { data: meResponse } = useMe();
   const currentUser = meResponse?.data;
+  const navigate = useNavigate();
 
   const isAdmin = currentUser?.role === "admin";
   const isAssignedMentor = currentUser && student.mentor_id === currentUser.id;
   const canEdit = isAdmin || isAssignedMentor;
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const updateMutation = useUpdateStudent(student.id);
+  const deleteMutation = useDeleteStudent();
 
   const {
     register,
@@ -248,6 +255,17 @@ export default function StudentDetailData({ student }: StudentDetailDataProps) {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(student.id);
+      toast.success("Student deleted successfully");
+      setIsDeleteDialogOpen(false);
+      navigate("/students");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to delete student");
+    }
+  };
+
   // Permission denied
   if (!canEdit) {
     return (
@@ -280,13 +298,25 @@ export default function StudentDetailData({ student }: StudentDetailDataProps) {
             Modify credentials, academic level, and upload profile images to Cloudinary.
           </p>
         </div>
-        <button
-          type="submit"
-          disabled={updateMutation.isPending}
-          className="px-lg py-2 bg-primary hover:bg-primary-focus disabled:opacity-40 text-on-primary text-[13px] font-semibold rounded-xl transition-all shadow-xs flex items-center gap-xs"
-        >
-          {updateMutation.isPending ? "Saving..." : "Save Changes"}
-        </button>
+        <div className="flex items-center gap-xs">
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="px-md py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 text-[13px] font-semibold rounded-xl transition-all flex items-center gap-xs border border-rose-100 shadow-xs"
+            >
+              <LuTrash className="w-4 h-4" />
+              Delete
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={updateMutation.isPending}
+            className="px-lg py-2 bg-primary hover:bg-primary-focus disabled:opacity-40 text-on-primary text-[13px] font-semibold rounded-xl transition-all shadow-xs flex items-center gap-xs"
+          >
+            {updateMutation.isPending ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
       </div>
 
       {/* Grid */}
@@ -458,6 +488,22 @@ export default function StudentDetailData({ student }: StudentDetailDataProps) {
           <input type="hidden" {...register("cover_img")} />
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        title="Delete Student"
+        variant="danger"
+        confirmLabel="Delete"
+        onConfirm={handleDelete}
+        isLoading={deleteMutation.isPending}
+        size="2xl"
+      >
+        <p>
+          Are you sure you want to delete <strong>{student.name}</strong>? This action cannot be undone and will remove all their data and progress records.
+        </p>
+      </Modal>
     </form>
   );
 }
