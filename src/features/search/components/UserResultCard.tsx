@@ -1,8 +1,10 @@
+import { Link } from 'react-router';
 import { cn } from '@/utils/cn';
 import { getInitials } from '@/features/students/utils/studentTableHelpers';
+import type { Mentor } from '@/features/mentor/types/mentor';
 
 interface UserResultCardProps {
-  user: any;
+  user: Mentor;
 }
 
 export function UserResultCard({ user }: UserResultCardProps) {
@@ -28,9 +30,12 @@ export function UserResultCard({ user }: UserResultCardProps) {
           <p className="text-[12px] text-muted">{user.email}</p>
         </div>
       </div>
-      <button className="px-md py-[6px] rounded-lg border border-border-card text-[13px] font-medium text-on-surface hover:bg-surface-container transition-colors">
+      <Link
+        to={`/mentor/${user.id}`}
+        className="px-md py-[6px] rounded-lg border border-border-card text-[13px] font-medium text-on-surface hover:bg-surface-container transition-colors"
+      >
         Details
-      </button>
+      </Link>
     </div>
   );
 }
