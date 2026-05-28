@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router';
+import { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router';
 import { useMentorDetail } from '@/features/mentorDetail/hooks/useMentorDetail';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { StudentAvatar } from '@/features/students/components/StudentAvatar';
@@ -11,13 +12,39 @@ import {
   LuArrowLeft,
   LuPhone,
   LuBookOpen,
+  LuTrash2,
 } from 'react-icons/lu';
 import { formatDistanceToNow } from 'date-fns';
+import { useMe } from '@/features/auth/hooks/useMe';
+import { useDeleteUser } from '@/features/auth/hooks/useDeleteUser';
+import { toast } from 'sonner';
+import Modal from '@/components/shared/modal';
 
 export default function MentorDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { data: response, isLoading, isError } = useMentorDetail(id);
   const mentor = response?.data;
+
+  const { data: meResponse } = useMe();
+  const currentUser = meResponse?.data;
+  const isAdmin = currentUser?.role === "admin";
+  const isSelf = currentUser?.id === mentor?.id;
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const deleteMutation = useDeleteUser();
+
+  const handleDelete = async () => {
+    if (!mentor) return;
+    try {
+      await deleteMutation.mutateAsync(mentor.id);
+      toast.success("Mentor deleted successfully");
+      setIsDeleteDialogOpen(false);
+      navigate("/mentor");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to delete mentor");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -71,12 +98,23 @@ export default function MentorDetailPage() {
           <span className="text-primary font-medium">{mentor.name}</span>
         </div>
 
-        <Link
-          to="/mentor"
-          className="inline-flex items-center gap-xs text-[13px] font-semibold text-primary hover:underline self-start sm:self-auto"
-        >
-          <LuArrowLeft className="w-4 h-4" /> Back to List
-        </Link>
+        <div className="flex items-center gap-sm">
+          {isAdmin && !isSelf && (
+            <button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="px-md py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 text-[13px] font-semibold rounded-xl transition-all flex items-center gap-xs border border-rose-100 shadow-xs"
+            >
+              <LuTrash2 className="w-4 h-4" />
+              Delete Mentor
+            </button>
+          )}
+          <Link
+            to="/mentor"
+            className="inline-flex items-center gap-xs text-[13px] font-semibold text-primary hover:underline self-start sm:self-auto"
+          >
+            <LuArrowLeft className="w-4 h-4" /> Back to List
+          </Link>
+        </div>
       </div>
 
       {/* Grid Layout */}
@@ -278,6 +316,20 @@ export default function MentorDetailPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        title="Delete Mentor"
+        variant="danger"
+        confirmLabel="Delete"
+        onConfirm={handleDelete}
+        isLoading={deleteMutation.isPending}
+      >
+        <p>
+          Are you sure you want to delete <strong>{mentor?.name}</strong>? This action cannot be undone and will remove all their data.
+        </p>
+      </Modal>
     </div>
   );
 }
