@@ -16,6 +16,6 @@ export const useStudents = (filters?: StudentFilters) => {
       const { data } = await api.get("/api/v1/students", { params: filters });
       return data;
     },
-    retry: false,
+    retry: 2,
   });
 };
