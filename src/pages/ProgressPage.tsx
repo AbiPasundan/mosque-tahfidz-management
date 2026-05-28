@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { LuPlus } from 'react-icons/lu';
 import ProgressBreadcrumb from '@/features/progressTracking/components/ProgressBreadcrumb';
-import ProgressBottomCards from '@/features/progressTracking/components/ProgressBottomCards';
 import { ProgressHeader } from '@/features/progressTracking/components/ProgressHeader';
 import { ProgressEntryForm } from '@/features/progressTracking/components/ProgressEntryForm';
 import { ProgressQueue } from '@/features/progressTracking/components/ProgressQueue';
@@ -84,17 +82,8 @@ export default function ProgressPage() {
             onSubmit={submitSession}
             isPending={bulkCreateMutation.isPending}
           />
-
-          {/* FAB */}
-          <div className="fixed bottom-24 md:bottom-8 right-6 z-30">
-            <button className="w-14 h-14 rounded-full bg-primary text-on-primary shadow-lg hover:shadow-xl hover:bg-primary-container transition-all flex items-center justify-center">
-              <LuPlus className="w-6 h-6" />
-            </button>
-          </div>
         </div>
       </div>
-
-      <ProgressBottomCards />
     </div>
   );
 }
