@@ -48,7 +48,7 @@ function StudentDetailMainRight({ student }: { student: Student }) {
                 <StudentDetailProgress student={student} />
             )}
             {activeTab === 'Hafalan' && (
-                <StudentDetailHafalan student={student} progress={progress} />
+                <StudentDetailHafalan student={student} />
             )}
             {activeTab === 'Data' && (
                 <StudentDetailData student={student} />
