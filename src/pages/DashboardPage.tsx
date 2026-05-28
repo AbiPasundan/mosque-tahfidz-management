@@ -115,7 +115,7 @@ export default function DashboardPage() {
 
         <div className="space-y-lg">
           <QuickActionsCard actions={quickActionsData} />
-          <LiveUpdatesCard updates={liveUpdatesData} />
+          {/* <LiveUpdatesCard updates={liveUpdatesData} /> */}
         </div>
       </div>
 
