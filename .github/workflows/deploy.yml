@@ -1,0 +1,42 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Replace Placeholder in netlify.toml
+        env:
+          API_PROXY_TARGET: ${{ secrets.API_PROXY_TARGET }}
+        run: sed -i "s|BACKEND_URL_PLACEHOLDER|$API_PROXY_TARGET|g" netlify.toml
+
+      - name: Build project
+        env:
+          VITE_API_PROXY_TARGET: ${{ secrets.VITE_API_PROXY_TARGET }}
+          VITE_API_BASE_URL: "/api"
+        run: npm run build
+
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NET_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NET_SITE_ID }}
+        with:
+          args: deploy --dir=dist --prod
