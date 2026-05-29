@@ -25,7 +25,12 @@ jobs:
       - name: Replace Placeholder in netlify.toml
         env:
           API_PROXY_TARGET: ${{ secrets.API_PROXY_TARGET }}
-        run: sed -i "s|BACKEND_URL_PLACEHOLDER|$API_PROXY_TARGET|g" netlify.toml
+        run: |
+          if [ -z "$API_PROXY_TARGET" ]; then
+            echo "Error: API_PROXY_TARGET secret is missing di GitHub!"
+            exit 1
+          fi
+          sed -i "s|BACKEND_URL_PLACEHOLDER|$API_PROXY_TARGET|g" netlify.toml
 
       - name: Build project
         env:
@@ -35,8 +40,8 @@ jobs:
 
       - name: Deploy to Netlify
         uses: netlify/actions/cli@master
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NET_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NET_SITE_ID }}
         with:
           args: deploy --dir=dist --prod
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
