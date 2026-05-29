@@ -23,13 +23,13 @@ export function ProgressQueue({ queue, onRemove, onSubmit, isPending }: Progress
         </span>
       </div>
 
-      <div className="space-y-md max-h-[400px] overflow-y-auto pr-1">
+      <div className="space-y-md max-h-100 overflow-y-auto pr-1">
         {queue.length > 0 ? queue.map((entry, i) => (
           <div key={i} className="flex items-start gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors group">
             <div className={cn(
-              'w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0',
-              entry.status === 'LANCAR' ? 'bg-primary' : 
-              entry.status === 'ZIYADAH' ? 'bg-amber-500' : 'bg-rose-500'
+              'w-2.5 h-2.5 rounded-full mt-1.5 shrink-0',
+              entry.status === 'TAHSIN' ? 'bg-primary' :
+                entry.status === 'MENGULANG' ? 'bg-amber-500' : 'bg-rose-500'
             )} />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
@@ -38,18 +38,18 @@ export function ProgressQueue({ queue, onRemove, onSubmit, isPending }: Progress
                   <LuTrash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <div className="flex items-center justify-between mt-[2px]">
+              <div className="flex items-center justify-between mt-0.5">
                 <p className="text-[12px] text-muted">{entry.surah}: {entry.ayat_start}-{entry.ayat_end}</p>
                 <span className={cn(
                   'px-1.5 py-0.5 rounded text-[8px] font-bold uppercase',
-                  entry.status === 'LANCAR' ? 'bg-primary/10 text-primary' : 
-                  entry.status === 'ZIYADAH' ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700'
+                  entry.status === 'TAHSIN' ? 'bg-primary/10 text-primary' :
+                    entry.status === 'MENGULANG' ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700'
                 )}>
                   {entry.status}
                 </span>
               </div>
               {entry.notes && (
-                <p className="text-[11px] text-muted italic mt-[2px] line-clamp-1">"{entry.notes}"</p>
+                <p className="text-[11px] text-muted italic mt-0.5 line-clamp-1">"{entry.notes}"</p>
               )}
             </div>
           </div>
@@ -65,10 +65,10 @@ export function ProgressQueue({ queue, onRemove, onSubmit, isPending }: Progress
           <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Estimated Summary</span>
           <span className="text-[14px] font-bold text-on-surface">{totalAyat} Total Ayat</span>
         </div>
-        <button 
+        <button
           onClick={onSubmit}
           disabled={isPending || queue.length === 0}
-          className="w-full flex items-center justify-center gap-sm py-[10px] rounded-xl bg-primary text-on-primary text-[14px] font-semibold hover:bg-primary-container transition-colors disabled:opacity-50 shadow-md"
+          className="w-full flex items-center justify-center gap-sm py-2.5 rounded-xl bg-primary text-on-primary text-[14px] font-semibold hover:bg-primary-container transition-colors disabled:opacity-50 shadow-md"
         >
           <LuUpload className="w-4 h-4" />
           {isPending ? 'Submitting...' : 'Finish Session'}

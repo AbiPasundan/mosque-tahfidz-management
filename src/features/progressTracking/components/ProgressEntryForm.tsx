@@ -1,3 +1,4 @@
+import { BiBookBookmark } from "react-icons/bi"; 
 import { useState } from 'react';
 import { cn } from '@/utils/cn';
 import { LuPlus, LuCircleCheck, LuRepeat, LuSparkles } from 'react-icons/lu';
@@ -26,8 +27,8 @@ export function ProgressEntryForm({
 }: ProgressEntryFormProps) {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState('LANCAR');
-  const [ayatStart, setAyatStart] = useState(1);
+  const [selectedStatus, setSelectedStatus] = useState('TAHSIN');
+  const [ayatStart, setAyatStart] = useState(0);
   const [ayatEnd, setAyatEnd] = useState(1);
   const [notes, setNotes] = useState('');
 
@@ -91,9 +92,9 @@ export function ProgressEntryForm({
           <label className="block text-[13px] font-medium text-on-surface mb-1.5">Status</label>
           <div className="grid grid-cols-3 gap-sm">
             {[
-              { key: 'LANCAR', label: 'Lancar', icon: <LuCircleCheck className="w-5 h-5" /> },
+              { key: 'TAHSIN', label: 'Tahsin', icon: <LuCircleCheck className="w-5 h-5" /> },
               { key: 'MENGULANG', label: 'Mengulang', icon: <LuRepeat className="w-5 h-5" /> },
-              { key: 'ZIYADAH', label: 'Ziyadah', icon: <LuSparkles className="w-5 h-5" /> },
+              { key: 'TAHFIDZ', label: 'Tahfidz', icon: <BiBookBookmark className="w-5 h-5" /> },
             ].map((status) => (
               <button
                 key={status.key}
@@ -119,7 +120,7 @@ export function ProgressEntryForm({
           <label className="block text-[13px] font-medium text-on-surface mb-1.5">Ayat Start</label>
           <input
             type="number"
-            min={1}
+            min={0}
             max={selectedSurah?.jumlahAyat || 286}
             value={ayatStart}
             onChange={(e) => setAyatStart(parseInt(e.target.value) || 1)}
