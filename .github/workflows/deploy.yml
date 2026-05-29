@@ -41,5 +41,5 @@ jobs:
       - name: Deploy to Netlify
         run: npx netlify-cli deploy --dir=dist --prod
         env:
-          NET_AUTH_TOKEN: ${{ secrets.NET_AUTH_TOKEN }}
-          NET_SITE_ID: ${{ secrets.NET_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NET_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NET_SITE_ID }}
