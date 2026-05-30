@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
       {/* Chart + Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-        <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl border border-border-card p-lg">
+        <div className="lg:col-span-2 min-w-0 bg-surface-container-lowest rounded-xl border border-border-card p-lg">
           <div className="flex items-center justify-between mb-lg">
             <h3 className="text-[18px] font-semibold text-on-surface font-[Manrope]">
               Weekly Student Activity
@@ -113,14 +113,14 @@ export default function DashboardPage() {
           <DashboardChart data={dashboard?.weekly_activity || []} />
         </div>
 
-        <div className="space-y-lg">
+        <div className="space-y-lg min-w-0">
           <QuickActionsCard actions={quickActionsData} />
           {/* <LiveUpdatesCard updates={liveUpdatesData} /> */}
         </div>
       </div>
 
       {/* Recent Progress Table */}
-      <div className="bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
+      <div className="min-w-0 bg-surface-container-lowest rounded-xl border border-border-card overflow-hidden">
         <div className="flex items-center justify-between px-lg py-md border-b border-border-card">
           <h3 className="text-[18px] font-semibold text-on-surface font-[Manrope]">
             Recent Learning History

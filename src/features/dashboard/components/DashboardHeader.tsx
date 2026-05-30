@@ -10,12 +10,12 @@ function DashboardHeader() {
                     Welcome back. Here is what's happening with your students today.
                 </p>
             </div>
-            <div className="flex items-center gap-sm shrink-0">
-                <button className="flex items-center gap-sm px-lg py-2.25 rounded-lg border border-border-card text-[13px] font-medium text-on-surface hover:bg-surface-container transition-colors">
+            <div className="flex flex-wrap items-center gap-sm w-full sm:w-auto">
+                <button className="flex-1 sm:flex-none flex justify-center items-center gap-sm px-lg py-2.25 rounded-lg border border-border-card text-[13px] font-medium text-on-surface hover:bg-surface-container transition-colors">
                     <LuDownload className="w-4 h-4" />
                     Export Report
                 </button>
-                <Link to="/students/add" className="flex items-center gap-sm px-lg py-2.25 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors" >
+                <Link to="/students/add" className="flex-1 sm:flex-none flex justify-center items-center gap-sm px-lg py-2.25 rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors" >
                     <LuPlus className="w-4 h-4" />
                     Add Student
                 </Link>
