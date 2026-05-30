@@ -23,6 +23,7 @@ import { useMe } from "@/features/auth/hooks/useMe";
 import { useUpdateStudent } from "@/features/students/hooks/useUpdateStudent";
 import { useDeleteStudent } from "@/features/students/hooks/useDeleteStudent";
 import { useUploadFile } from "@/features/upload/hooks/useUploadFile";
+import { useOfflineGuard } from "@/hooks/useOfflineGuard";
 import Modal from "@/components/shared/modal";
 import { cn } from "@/utils/cn";
 
@@ -217,6 +218,7 @@ export default function StudentDetailData({ student }: StudentDetailDataProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const updateMutation = useUpdateStudent(student.id);
   const deleteMutation = useDeleteStudent();
+  const { isOnline } = useOfflineGuard();
 
   const {
     register,
@@ -311,10 +313,10 @@ export default function StudentDetailData({ student }: StudentDetailDataProps) {
           )}
           <button
             type="submit"
-            disabled={updateMutation.isPending}
+            disabled={updateMutation.isPending || !isOnline}
             className="px-lg py-2 bg-primary hover:bg-primary-focus disabled:opacity-40 text-on-primary text-[13px] font-semibold rounded-xl transition-all shadow-xs flex items-center gap-xs"
           >
-            {updateMutation.isPending ? "Saving..." : "Save Changes"}
+            {!isOnline ? '🔴 Offline' : updateMutation.isPending ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

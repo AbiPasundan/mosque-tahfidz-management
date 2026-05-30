@@ -32,6 +32,7 @@ import {
 } from "../hooks/useMemorize";
 import type { MemorizeRecord, MemorizeStatus } from "../types/memorize";
 import Modal from "@/components/shared/modal";
+import { useOfflineGuard } from "@/hooks/useOfflineGuard";
 import { toast } from "sonner";
 
 interface GroupedSurah {
@@ -60,6 +61,7 @@ function StudentDetailHafalan({ student }: { student: Student }) {
   const isAdmin = currentUser?.role === "admin";
   const isAssignedMentor = currentUser && student.mentor_id === currentUser.id;
   const canEdit = isAdmin || isAssignedMentor;
+  const { isOnline } = useOfflineGuard();
 
   // UI state variables
   const [expandedSurahs, setExpandedSurahs] = useState<Record<number, boolean>>({});
@@ -427,8 +429,15 @@ function StudentDetailHafalan({ student }: { student: Student }) {
 
         {canEdit && (
           <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center justify-center gap-sm px-lg py-2.5 rounded-xl bg-primary text-on-primary text-[13px] font-semibold hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md cursor-pointer"
+            onClick={() => {
+              if (!isOnline) {
+                toast.warning('Kamu sedang offline. Tindakan ini memerlukan koneksi internet.');
+                return;
+              }
+              setIsAddModalOpen(true);
+            }}
+            disabled={!isOnline}
+            className="flex items-center justify-center gap-sm px-lg py-2.5 rounded-xl bg-primary text-on-primary text-[13px] font-semibold hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <LuPlus className="w-4 h-4" />
             Add Memorization
