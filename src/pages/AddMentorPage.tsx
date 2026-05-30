@@ -20,6 +20,7 @@ import {
   createMentorSchema,
   type CreateMentorFormValues,
 } from "@/validations/mentor";
+import { useOfflineGuard } from "@/hooks/useOfflineGuard";
 import axios from "axios";
 
 const ROLE_OPTIONS = [
@@ -30,6 +31,7 @@ const ROLE_OPTIONS = [
 export default function AddMentorPage() {
   const navigate = useNavigate();
   const createMutation = useCreateMentor();
+  const { isOnline } = useOfflineGuard();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -67,6 +69,7 @@ export default function AddMentorPage() {
   };
 
   const isPending = isSubmitting || createMutation.isPending;
+  const isDisabled = isPending || !isOnline;
 
   return (
     <div className="space-y-lg animate-in fade-in-50 duration-200">
@@ -282,7 +285,7 @@ export default function AddMentorPage() {
               </Link>
               <button
                 type="submit"
-                disabled={isPending}
+                disabled={isDisabled}
                 className={cn(
                   "px-xl py-2.5 rounded-xl text-[14px] font-semibold",
                   "bg-primary text-on-primary",
@@ -293,7 +296,9 @@ export default function AddMentorPage() {
                   "flex items-center gap-sm"
                 )}
               >
-                {isPending ? (
+                {!isOnline ? (
+                  '🔴 Offline'
+                ) : isPending ? (
                   <>
                     <LuLoader className="w-4 h-4 animate-spin" />
                     Registering...

@@ -6,6 +6,7 @@ import { ProgressQueue } from '@/features/progressTracking/components/ProgressQu
 import { useStudents } from '@/features/students/hooks/useStudents';
 import { useSurahs, useBulkCreateProgress } from '@/features/progressTracking/hooks/useProgress';
 import { useMe } from '@/features/auth/hooks/useMe';
+import { useOfflineGuard } from '@/hooks/useOfflineGuard';
 import { toast } from 'sonner';
 import type { QueueEntry } from '@/features/progressTracking/types/progress';
 
@@ -18,6 +19,7 @@ export default function ProgressPage() {
   const { data: studentsResponse, isLoading: loadingStudents } = useStudents({ limit: 100 });
   const { data: surahs, isLoading: loadingSurahs } = useSurahs();
   const bulkCreateMutation = useBulkCreateProgress();
+  const { isOnline, guardAction } = useOfflineGuard();
 
   const students = studentsResponse?.data || [];
 
@@ -63,6 +65,7 @@ export default function ProgressPage() {
         onSubmit={submitSession}
         isPending={bulkCreateMutation.isPending}
         queueLength={queue.length}
+        isOnline={isOnline}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-lg">

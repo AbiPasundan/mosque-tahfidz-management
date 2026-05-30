@@ -4,9 +4,12 @@ interface ProgressHeaderProps {
   onSubmit: () => void;
   isPending: boolean;
   queueLength: number;
+  isOnline?: boolean;
 }
 
-export function ProgressHeader({ onSubmit, isPending, queueLength }: ProgressHeaderProps) {
+export function ProgressHeader({ onSubmit, isPending, queueLength, isOnline = true }: ProgressHeaderProps) {
+  const isDisabled = isPending || queueLength === 0 || !isOnline;
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-md">
       <div>
@@ -21,11 +24,11 @@ export function ProgressHeader({ onSubmit, isPending, queueLength }: ProgressHea
         </button>
         <button
           onClick={onSubmit}
-          disabled={isPending || queueLength === 0}
+          disabled={isDisabled}
           className="flex items-center gap-sm px-lg py-[9px] rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors disabled:opacity-50"
         >
           <LuSave className="w-4 h-4" />
-          {isPending ? 'Submitting...' : 'Submit Entries'}
+          {!isOnline ? '🔴 Offline' : isPending ? 'Submitting...' : 'Submit Entries'}
         </button>
       </div>
     </div>

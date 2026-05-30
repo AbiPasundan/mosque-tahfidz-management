@@ -23,6 +23,7 @@ import {
   createStudentSchema,
   type CreateStudentFormValues,
 } from "@/validations/student";
+import { useOfflineGuard } from "@/hooks/useOfflineGuard";
 import axios from "axios";
 
 const LEARNING_LEVELS = [
@@ -53,6 +54,7 @@ const STATUS_OPTIONS = [
 export default function AddStudentPage() {
   const navigate = useNavigate();
   const createMutation = useCreateStudent();
+  const { isOnline } = useOfflineGuard();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -93,6 +95,7 @@ export default function AddStudentPage() {
   };
 
   const isPending = isSubmitting || createMutation.isPending;
+  const isDisabled = isPending || !isOnline;
 
   return (
     <div className="space-y-lg animate-in fade-in-50 duration-200">
@@ -421,7 +424,7 @@ export default function AddStudentPage() {
               </Link>
               <button
                 type="submit"
-                disabled={isPending}
+                disabled={isDisabled}
                 className={cn(
                   "px-xl py-2.5 rounded-xl text-[14px] font-semibold",
                   "bg-primary text-on-primary",
@@ -432,7 +435,9 @@ export default function AddStudentPage() {
                   "flex items-center gap-sm"
                 )}
               >
-                {isPending ? (
+                {!isOnline ? (
+                  '🔴 Offline'
+                ) : isPending ? (
                   <>
                     <LuLoader className="w-4 h-4 animate-spin" />
                     Creating...

@@ -6,6 +6,7 @@ import { StudentSelector } from './StudentSelector';
 import { SurahSelector } from './SurahSelector';
 import type { Student } from '@/features/students/types/student';
 import type { Surah, QueueEntry } from '../types/progress';
+import { useOfflineGuard } from '@/hooks/useOfflineGuard';
 import { toast } from 'sonner';
 
 interface ProgressEntryFormProps {
@@ -31,12 +32,14 @@ export function ProgressEntryForm({
   const [ayatStart, setAyatStart] = useState(0);
   const [ayatEnd, setAyatEnd] = useState(1);
   const [notes, setNotes] = useState('');
+  const { isOnline, guardAction } = useOfflineGuard();
 
   const handleAdd = () => {
-    if (!selectedStudent || !selectedSurah) {
-      toast.error('Please select both student and surah');
-      return;
-    }
+    guardAction(() => {
+      if (!selectedStudent || !selectedSurah) {
+        toast.error('Please select both student and surah');
+        return;
+      }
 
     if (ayatEnd < ayatStart) {
       toast.error('Ayat End cannot be less than Ayat Start');
@@ -58,12 +61,13 @@ export function ProgressEntryForm({
       notes: notes,
     });
 
-    // Reset local form state
-    setSelectedStudent(null);
-    setSelectedSurah(null);
-    setNotes('');
-    setAyatStart(1);
-    setAyatEnd(1);
+      // Reset local form state
+      setSelectedStudent(null);
+      setSelectedSurah(null);
+      setNotes('');
+      setAyatStart(1);
+      setAyatEnd(1);
+    });
   };
 
   return (
@@ -166,10 +170,11 @@ export function ProgressEntryForm({
       <div className="flex justify-end">
         <button
           onClick={handleAdd}
-          className="flex items-center gap-sm px-xl py-2.5 rounded-xl bg-primary text-on-primary text-[14px] font-semibold hover:bg-primary-container transition-colors shadow-md"
+          disabled={!isOnline}
+          className="flex items-center gap-sm px-xl py-2.5 rounded-xl bg-primary text-on-primary text-[14px] font-semibold hover:bg-primary-container transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <LuPlus className="w-4 h-4" />
-          Add to Session Queue
+          {!isOnline ? '🔴 Offline' : 'Add to Session Queue'}
         </button>
       </div>
     </div>

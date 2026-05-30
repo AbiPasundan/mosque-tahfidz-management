@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { LuUser } from 'react-icons/lu';
 import { toast } from 'sonner';
 import { useUpdateProfile } from '@/features/auth/hooks/useUpdateProfile';
+import { useOfflineGuard } from '@/hooks/useOfflineGuard';
 
 interface ProfileSettingsFormProps {
   initialName: string;
@@ -12,6 +13,7 @@ export function ProfileSettingsForm({ initialName, initialEmail }: ProfileSettin
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
   const updateProfileMutation = useUpdateProfile();
+  const { isOnline } = useOfflineGuard();
 
   useEffect(() => {
     setName(initialName);
@@ -64,10 +66,10 @@ export function ProfileSettingsForm({ initialName, initialEmail }: ProfileSettin
         <div className="pt-sm">
           <button 
             type="submit"
-            disabled={updateProfileMutation.isPending}
+            disabled={updateProfileMutation.isPending || !isOnline}
             className="px-lg py-[9px] rounded-lg bg-primary text-on-primary text-[13px] font-medium hover:bg-primary-container transition-colors disabled:opacity-50"
           >
-            {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
+            {!isOnline ? '🔴 Offline' : updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </form>

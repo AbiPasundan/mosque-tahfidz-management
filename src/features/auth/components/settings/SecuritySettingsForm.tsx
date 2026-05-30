@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { LuLock } from 'react-icons/lu';
 import { toast } from 'sonner';
 import { useUpdatePassword } from '@/features/auth/hooks/useUpdateProfile';
+import { useOfflineGuard } from '@/hooks/useOfflineGuard';
 
 export function SecuritySettingsForm() {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const updatePasswordMutation = useUpdatePassword();
+  const { isOnline } = useOfflineGuard();
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,10 +82,10 @@ export function SecuritySettingsForm() {
         <div className="pt-sm">
           <button
             type="submit"
-            disabled={updatePasswordMutation.isPending}
+            disabled={updatePasswordMutation.isPending || !isOnline}
             className="px-lg py-[9px] rounded-lg bg-surface-container-highest text-on-surface text-[13px] font-medium hover:bg-surface-container transition-colors disabled:opacity-50"
           >
-            {updatePasswordMutation.isPending ? 'Updating...' : 'Update Password'}
+            {!isOnline ? '🔴 Offline' : updatePasswordMutation.isPending ? 'Updating...' : 'Update Password'}
           </button>
         </div>
       </form>

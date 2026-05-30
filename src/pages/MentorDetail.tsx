@@ -17,6 +17,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { useMe } from '@/features/auth/hooks/useMe';
 import { useDeleteUser } from '@/features/auth/hooks/useDeleteUser';
+import { useOfflineGuard } from '@/hooks/useOfflineGuard';
 import { toast } from 'sonner';
 import Modal from '@/components/shared/modal';
 
@@ -33,6 +34,7 @@ export default function MentorDetailPage() {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteMutation = useDeleteUser();
+  const { isOnline } = useOfflineGuard();
 
   const handleDelete = async () => {
     if (!mentor) return;
@@ -101,8 +103,15 @@ export default function MentorDetailPage() {
         <div className="flex items-center gap-sm">
           {isAdmin && !isSelf && (
             <button
-              onClick={() => setIsDeleteDialogOpen(true)}
-              className="px-md py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 text-[13px] font-semibold rounded-xl transition-all flex items-center gap-xs border border-rose-100 shadow-xs"
+              onClick={() => {
+                if (!isOnline) {
+                  toast.warning('Kamu sedang offline. Tindakan ini memerlukan koneksi internet.');
+                  return;
+                }
+                setIsDeleteDialogOpen(true);
+              }}
+              disabled={!isOnline}
+              className="px-md py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 text-[13px] font-semibold rounded-xl transition-all flex items-center gap-xs border border-rose-100 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <LuTrash2 className="w-4 h-4" />
               Delete Mentor
