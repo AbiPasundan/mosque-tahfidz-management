@@ -2,6 +2,7 @@ import { Navigate, Outlet } from 'react-router';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { MobileBottomNav } from '../navigation/MobileBottomNav';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { useMe } from '@/features/auth/hooks/useMe';
 import { useAuthStore } from '@/stores/authStore';
 import axios from 'axios';
@@ -9,10 +10,11 @@ import axios from 'axios';
 function AppShell() {
   return (
     <div className="min-h-screen bg-surface flex">
+      <OfflineBanner />
       <AppSidebar />
-      <div className="flex-1 flex flex-col min-h-screen md:ml-sidebar-width">
+      <div className="flex-1 flex flex-col min-h-screen md:ml-sidebar-width min-w-0">
         <AppHeader />
-        <main className="flex-1 px-gutter py-lg mx-auto w-full max-w-max-content-width pb-20 md:pb-lg">
+        <main className="flex-1 px-gutter py-lg mx-auto w-full max-w-max-content-width pb-20 md:pb-lg min-w-0">
           <Outlet />
         </main>
         <MobileBottomNav />

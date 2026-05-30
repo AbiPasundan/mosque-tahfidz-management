@@ -52,12 +52,12 @@ export function AppSidebar() {
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-30 bg-black/20 backdrop-blur-[2px] md:hidden" onClick={() => setOpen(false)} aria-hidden="true" />
+        <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-[2px] md:hidden" onClick={() => setOpen(false)} aria-hidden="true" />
       )}
 
       <aside
         className={cn(
-          'fixed top-0 left-0 h-screen w-sidebar-width bg-surface-container-low z-40',
+          'fixed top-0 left-0 h-screen w-sidebar-width bg-surface-container-low z-[60]',
           'flex flex-col border-r border-border-light',
           'transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : '-translate-x-full',
