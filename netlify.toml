@@ -25,7 +25,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "BACKEND_URL_PLACEHOLDER/:splat"
+  to = "BACKEND_URL_PLACEHOLDER/api/:splat"
   status = 200
   force = true
 
