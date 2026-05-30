@@ -40,15 +40,16 @@ function StudentTable() {
     useEffect(() => {
         const handler = setTimeout(() => {
             if (searchInput !== q) {
-                const newParams = new URLSearchParams(searchParams);
-                if (searchInput) newParams.set("q", searchInput);
-                else newParams.delete("q");
-                newParams.set("page", "1"); // Reset to page 1 on new search
-                setSearchParams(newParams, { replace: true });
+                setSearchParams((prev) => {
+                    if (searchInput) prev.set("q", searchInput);
+                    else prev.delete("q");
+                    prev.set("page", "1"); // Reset to page 1 on new search
+                    return prev;
+                }, { replace: true });
             }
         }, 300);
         return () => clearTimeout(handler);
-    }, [searchInput, q, searchParams, setSearchParams]);
+    }, [searchInput, q, setSearchParams]);
 
     const { data, isLoading, isFetching } = useStudents({
         page,
@@ -73,13 +74,19 @@ function StudentTable() {
         },
         onSortingChange: setSorting,
         onPaginationChange: (updater) => {
-            const currentPagination = { pageIndex: page - 1, pageSize: limit };
-            const nextPagination = typeof updater === 'function' ? updater(currentPagination) : updater;
+            setSearchParams(
+                (prev) => {
+                    const currentPage = parseInt(prev.get("page") || "1", 10);
+                    const currentLimit = parseInt(prev.get("limit") || String(DEFAULT_PAGE_SIZE), 10);
+                    const currentPagination = { pageIndex: currentPage - 1, pageSize: currentLimit };
+                    const nextPagination = typeof updater === 'function' ? updater(currentPagination) : updater;
 
-            const newParams = new URLSearchParams(searchParams);
-            newParams.set("page", String(nextPagination.pageIndex + 1));
-            newParams.set("limit", String(nextPagination.pageSize));
-            setSearchParams(newParams, { replace: true });
+                    prev.set("page", String(nextPagination.pageIndex + 1));
+                    prev.set("limit", String(nextPagination.pageSize));
+                    return prev;
+                },
+                { replace: true }
+            );
         },
         pageCount: totalPages,
         manualPagination: true,
@@ -88,11 +95,12 @@ function StudentTable() {
     });
 
     const handleStatusFilter = (value: string) => {
-        const newParams = new URLSearchParams(searchParams);
-        if (value === "all") newParams.delete("status");
-        else newParams.set("status", value);
-        newParams.set("page", "1"); // Reset to page 1 on filter change
-        setSearchParams(newParams, { replace: true });
+        setSearchParams((prev) => {
+            if (value === "all") prev.delete("status");
+            else prev.set("status", value);
+            prev.set("page", "1"); // Reset to page 1 on filter change
+            return prev;
+        }, { replace: true });
     };
 
     const handleGlobalFilterChange = (value: string) => {

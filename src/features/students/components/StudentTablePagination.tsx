@@ -28,8 +28,10 @@ export function StudentTablePagination<T>({ table, totalRows }: StudentTablePagi
                 <select
                     value={pageSize}
                     onChange={(e) => {
-                        table.setPageSize(Number(e.target.value));
-                        table.setPageIndex(0);
+                        table.setPagination({
+                            pageIndex: 0,
+                            pageSize: Number(e.target.value)
+                        });
                     }}
                     className="px-2 py-1 rounded-lg border border-border-card bg-surface-container-low/50 text-[12px] text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 >
