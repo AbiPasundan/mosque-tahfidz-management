@@ -1,5 +1,5 @@
 [build]
-  command = "TARGET=${API_PROXY_TARGET:-$VITE_API_PROXY_TARGET} && CLEAN_TARGET=$(echo $TARGET | sed 's|/api/v1/*$||' | sed 's|/api/*$||' | sed 's|/$||') && sed -i \"s|BACKEND_URL_PLACEHOLDER|$CLEAN_TARGET|g\" netlify.toml && npm run build"
+  command = "node scripts/setup-proxy.js && npm run build"
   publish = "dist"
 
 # Caching headers for PWA and assets

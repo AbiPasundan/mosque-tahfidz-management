@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
@@ -25,17 +25,13 @@ jobs:
       - name: Replace Placeholder in netlify.toml
         env:
           API_PROXY_TARGET: ${{ secrets.API_PROXY_TARGET }}
-        run: |
-          if [ -z "$API_PROXY_TARGET" ]; then
-            echo "::error::Secret API_PROXY_TARGET tidak ditemukan!"
-            exit 1
-          fi
-          sed -i "s|BACKEND_URL_PLACEHOLDER|$API_PROXY_TARGET|g" netlify.toml
+          VITE_API_PROXY_TARGET: ${{ secrets.VITE_API_PROXY_TARGET }}
+        run: node scripts/setup-proxy.js
 
       - name: Build project
         env:
           VITE_API_PROXY_TARGET: ${{ secrets.VITE_API_PROXY_TARGET }}
-          VITE_API_BASE_URL: "/api"
+          VITE_API_BASE_URL: "/"
         run: npm run build
 
       - name: Deploy to Netlify
